@@ -1,0 +1,362 @@
+
+body {font-family: 'Poppins', sans-serif !important;}
+
+/* Manjunath */
+/* Navbar Base */
+.navbar-custom {
+  background: #000;
+  padding: 12px 30px;
+  color: white;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.nav-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Links */
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+}
+
+.nav-links a {
+  color: #e5e7eb;
+  text-decoration: none;
+  transition: 0.3s;
+}
+
+.nav-links a:hover {
+    color: #f7d17c;
+}
+
+/* Profile */
+.profile {
+  position: relative;
+}
+
+.avatar {
+  width: 50px;
+  height: 50px;
+  background: #a855f7;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.profile-menu {
+  position: absolute;
+  right: 0;
+  top: 53px;
+  background: #894141;
+  color: black;
+  border-radius: 8px;
+  padding: 10px 0;
+  min-width: 150px;
+  display: none;
+}
+
+.profile-menu.show {
+  opacity: 1;
+  transform: scale(1);
+  pointer-events: auto;
+  display: block;
+}
+
+.profile-menu a,
+.profile-menu button {
+  display: block;
+  width: 100%;
+  padding: 8px 15px;
+  background: none;
+  border: none;
+  text-align: left;
+}
+
+.profile-menu a:hover,
+.profile-menu button:hover {
+  background: #000;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .nav-links {
+    display: none;
+  }
+}
+
+/* TOP BAR */
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  background: #545151;
+  color: #fff;
+  padding: 5px 20px;
+  font-size: 14px;
+}
+
+.top-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.top-right a{
+ color:#fff;
+ text-decoration: none;
+}
+
+.top-left {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.top-left a{
+ color:#fff;
+ text-decoration: none;
+}
+
+/* MOBILE MENU */
+.menu-toggle {
+  display: none;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .menu-toggle {
+    display: block;
+  }
+
+  .nav-links {
+    position: absolute;
+    top: 120px;
+    left: 0;
+    width: 100%;
+    background: #000;
+    flex-direction: column;
+    display: none;
+    padding: 20px;
+  }
+
+  .nav-links.active {
+    display: flex;
+  }
+
+  .top-right {
+    display: block;
+    align-items: center;
+    gap: 15px;
+}
+
+  .top-bar {
+    flex-direction: column;
+    text-align: center;
+    gap: 5px;
+  }
+}
+
+
+
+
+/* footer Starts */
+.footer {
+  background: #01153e;
+  color: #fff;
+  padding: 50px 20px 20px;
+  font-family: 'Poppins', sans-serif !important;
+}
+
+/* Columns */
+.footer-col h3 {
+  color: #ffd17c;
+  margin-bottom: 17px;
+  font-size: 19px;
+}
+
+.footer-col ul {
+  list-style: none;
+  padding-left: 0rem;
+}
+
+.footer-col ul li {
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.footer-content ul li a{
+  text-decoration: none;
+  color:#fff;
+}
+
+.footer-content ul li a:hover{
+  text-decoration: none;
+  color:#afabab;
+}
+
+.address a{
+  text-decoration: none;
+  color:#aa9b9b;
+}
+
+/* Logo */
+.logo-col .logo {
+  font-size: 28px;
+  font-weight: bold;
+}
+
+/* Bottom */
+.footer-bottom {
+  border-top: 1px solid #333;
+  margin-top: 30px;
+  padding-top: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.social-icons span a{
+  margin-left: 20px;
+  font-size: 25px;
+  color:#ffffff;
+  text-decoration: none;
+}
+
+.social-icons span a:hover {
+  color: #fbaa16;
+}
+
+/* 📱 Mobile */
+@media (max-width: 600px) {
+  .footer-bottom {
+    flex-direction: column;
+    gap: 10px;
+  }
+}
+
+/* footer Ends */
+
+
+
+/* admin css Starts */
+.sidebar {
+  width: 250px;
+  min-height: 100vh;
+  background-color: #2c1a5a;
+  transition: 0.3s;
+}
+
+.sidebar .nav-link {
+  padding: 12px 20px;
+}
+
+.sidebar .nav-link:hover {
+  background: #f26522;
+}
+
+.topbar {
+  height: 60px;
+  background-color: #2c1a5a;
+}
+
+.main-content {
+  background: #f5f5f5;
+  min-height: 100vh;
+}
+
+
+/* Mobile hidden */
+@media (max-width: 768px) {
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: -250px;
+    z-index: 1050;
+    height: 100%;
+  }
+
+  .sidebar.show {
+    left: 0;
+  }
+}
+
+/* Overlay */
+/* .overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.4);
+  z-index: 1040;
+} */
+
+/* Topbar */
+.topbar {
+  height: 60px;
+  background-color: #2c1a5a;
+}
+
+/* Main content */
+.main-content {
+  background: #f5f5f5;
+  min-height: 100vh;
+}
+
+/* Achievements Admin Starts */
+.thumbnail {
+  height: 150px;
+  object-fit: cover;
+}
+
+.delete-btn {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+}
+
+.card:hover {
+  transform: scale(1.05);
+  transition: 0.3s;
+  cursor: pointer;
+}
+
+.whatsapp-icon-bar {
+  position: fixed;     /* makes it stick on screen */
+  bottom: 20px;        /* distance from bottom */
+  left: 20px;         /* distance from left */
+  z-index: 1000;       /* stays on top of other elements */
+}
+
+.whatsapp-icon-bar a {
+  text-decoration: none;
+}
+
+.whatsapp-icon-bar .fa-whatsapp {
+  font-size: 32px;           /* size of icon */
+  color: #fff;               /* icon color */
+  font-weight: bold;         /* bold icon */
+  background: #25d366;       /* WhatsApp green background */
+  padding: 12px;             /* some spacing around icon */
+  border-radius: 50%;        /* makes it circular */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); /* optional shadow */
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.whatsapp-icon-bar .fa-whatsapp:hover {
+  transform: scale(1.2);     /* grows on hover */
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.4);
+}
+
+

@@ -1,0 +1,108 @@
+/* Admission Start */
+/* Layout */
+.admission {
+  display: flex;
+  gap: 20px;
+  padding: 30px 0;
+  font-family: 'Poppins', sans-serif !important;
+}
+
+/* Left content */
+.content {
+  flex: 2;
+}
+
+.content h1 {
+  font-size: 26px;
+  margin-bottom: 15px;
+  font-weight: 600;
+}
+
+.content h2 {
+  margin-top: 20px;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.content p {
+  margin-top: 10px;
+  line-height: 1.6;
+  text-align: justify;
+}
+
+.content ul {
+  margin-top: 10px;
+  padding-left: 20px;
+}
+
+.content li {
+  margin-bottom: 8px;
+}
+
+/* Form box */
+.form-box {
+  flex: 1;
+  background: #e7e7e7;
+  padding: 20px;
+  border-left: 5px solid red;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.form-box h2 {
+  margin-bottom: 15px;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+form input,
+form textarea {
+  width: 100%;
+  margin-bottom: 12px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 16px;
+}
+
+form textarea {
+  min-height: 100px;
+}
+
+form select {
+  width: 100%;
+  margin-bottom: 12px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background: white;
+}
+
+button {
+  background: #0a2a66;
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #000e27;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .admission {
+    flex-direction: column;
+    padding: 15px;
+  }
+
+  .content h1 {
+    font-size: 22px;
+  }
+
+  .form-box {
+    border-left: none;
+    border-top: 5px solid red;
+  }
+}

@@ -1,0 +1,219 @@
+.why-section {
+  margin: 40px 40px;
+  font-family: 'Poppins', sans-serif !important;
+}
+
+/* LEFT PANEL */
+.left-panel {
+  background: #28666e;
+  color: white;
+  padding: 40px 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.left-panel h2 {
+  font-size: 32px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.left-panel p {
+  font-size: 15px;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+/* RIGHT PANEL */
+.right-panel {
+  background: #fff;
+  padding: 30px;
+}
+
+/* FEATURE BOX */
+.feature-box {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 10px;
+  border-bottom: 1px solid #d5c4c4;
+}
+
+.feature-box .icon {
+  font-size: 50px;
+  color: #d32f2f;
+}
+
+.feature-box p {
+  margin: 0;
+  font-weight: 500;
+}
+
+/* MOBILE RESPONSIVE */
+@media (max-width: 768px) {
+  .left-panel {
+    text-align: center;
+  }
+
+  .feature-box {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+
+
+/*  Rank Starts */
+.rank-section {
+  background: #0d2c6c;
+  padding: 60px 0;
+  color: white;
+}
+
+/* Title */
+.title {
+  font-size: 32px;
+  font-weight: bold;
+}
+
+.subtitle {
+  font-size: 22px;
+  margin-bottom: 30px;
+}
+
+/* Card */
+.student-card {
+  text-align: center;
+}
+
+.student-card img {
+  width: 120px;
+  height: 120px;
+  border-radius: 15px;
+  border: 4px solid #ffc107;
+  object-fit: cover;
+  margin-bottom: 10px;
+}
+
+.student-card h5 {
+  margin: 5px 0;
+}
+
+.student-card p {
+  margin: 0;
+  font-size: 14px;
+}
+
+.button:hover {
+  background-color: none !important;
+}
+
+/* Rank Badge */
+.rank {
+  display: inline-block;
+  background: #ffc107;
+  color: black;
+  padding: 5px 15px;
+  border-radius: 8px;
+  margin-top: 8px;
+  font-weight: bold;
+}
+
+/* Controls */
+.carousel-control-prev-icon,
+.carousel-control-next-icon i {
+  background-color: #fff;
+  border-radius: 50%;
+  padding: 15px;
+  opacity: 10;
+  width: auto !important;
+  color:#000
+}
+
+.carousel-control-prev-rank,
+.carousel-control-next-rank {
+  background: #008015;
+  margin-left: 2%; 
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  align-items: center;
+  justify-content: center;
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+  .title {
+    font-size: 22px;
+  }
+
+  .subtitle {
+    font-size: 18px;
+  }
+
+  .student-card img {
+    width: 100px;
+    height: 100px;
+  }
+}
+
+
+/* banner */
+
+.banner-slide {
+  height: 90vh;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+}
+
+.carousel-caption {
+  bottom: 8.25rem !important;
+  left: 25% !important;
+}
+
+
+/* DARK OVERLAY */
+.overlay {
+  background: rgba(0, 0, 0, 0.5);
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* TEXT */
+.banner-content {
+  color: white;
+  max-width: 700px;
+}
+
+.banner-content h1 {
+  font-size: 48px;
+  font-weight: bold;
+}
+
+.banner-content p {
+  font-size: 20px;
+}
+
+/* BUTTON */
+.content .btn {
+  padding: 10px 25px;
+  font-size: 16px;
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+  .banner-slide {
+    height: 60vh;
+  }
+
+  .content h1 {
+    font-size: 26px;
+  }
+
+  .content p {
+    font-size: 16px;
+  }
+}

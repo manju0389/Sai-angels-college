@@ -1,0 +1,53 @@
+{
+  "banners": [
+    {
+      "id": "1778830800428",
+      "image": "https://res.cloudinary.com/dydbq8bc5/image/upload/v1780037735/banners/images/mzf39gg18a02wc1v8s4i.webp",
+      "title": "Sai Angels Banner 1",
+      "description": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. "
+    },
+    {
+      "id": "1780037755200",
+      "image": "https://res.cloudinary.com/dydbq8bc5/image/upload/v1780037754/banners/images/mq2asamv8ryiso8tfgre.webp",
+      "title": "Sai Angels Banner 2",
+      "description": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. "
+    }
+  ],
+  "students": [
+    {
+      "id": "1778830575080",
+      "image": "https://res.cloudinary.com/dydbq8bc5/image/upload/v1780037790/students/images/gmpvbs76vmgy7rd44vdb.webp",
+      "name": "sanvi v",
+      "stream": "1st PUC (Science)",
+      "rank": "1st Rank"
+    },
+    {
+      "id": "1778830680039",
+      "image": "https://res.cloudinary.com/dydbq8bc5/image/upload/v1780037795/students/images/pnk32iiyiferwmiawbxs.webp",
+      "name": "zxczxc",
+      "stream": "zxczxc",
+      "rank": "zxczxc"
+    },
+    {
+      "id": "1778830690955",
+      "image": "https://res.cloudinary.com/dydbq8bc5/image/upload/v1780037806/students/images/jl4mma2xbpgv0yywzvth.webp",
+      "name": "sdfdsf",
+      "stream": "sdfsf",
+      "rank": "sdfsdf"
+    },
+    {
+      "id": "1778830718516",
+      "image": "https://res.cloudinary.com/dydbq8bc5/image/upload/v1780037814/students/images/salwefkr6qabjlojblco.webp",
+      "name": "aa",
+      "stream": "sasas",
+      "rank": "asasa"
+    },
+    {
+      "id": "1778830733597",
+      "image": "https://res.cloudinary.com/dydbq8bc5/image/upload/v1780037822/students/images/sybm8vktn5kzfg4oxocf.webp",
+      "name": "aas",
+      "stream": "asas",
+      "rank": "asas"
+    }
+  ]
+}

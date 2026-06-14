@@ -1,0 +1,164 @@
+/* about page starts*/
+.about {
+  padding: 40px 20px;
+  font-family: 'Poppins', sans-serif !important;
+}
+
+.about-container {
+  margin: auto;
+  display: flex;
+  align-items: center;
+  gap: 40px;
+}
+
+/* Images */
+.about-images {
+  display: flex;
+  gap: 20px;
+  flex: 1;
+}
+
+.about-images img {
+  width: 100%;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+/* Content */
+.about-content {
+  flex: 1;
+}
+
+.about-content h2, h3, h4{
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.about-content p {
+  line-height: 1.6;
+  text-align: justify;
+}
+
+.about-content h2 {
+    font-size: 26px;
+  }
+
+  .about-content h3 {
+    font-size: 26px;
+    text-align: center;
+    font-weight: 600;
+  }
+
+  .about-content h4 {
+    font-size: 24px;
+    padding-bottom: 1%;
+  }
+
+/* Tablet */
+@media (max-width: 992px) {
+  .about-container {
+    flex-direction: column;
+  }
+
+  .about-images {
+    width: 100%;
+  }
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+  .about {
+    padding: 40px 15px;
+  }
+
+  .about-content h2 {
+    font-size: 26px;
+  }
+
+  .about-content h3 {
+    font-size: 18px;
+  }
+
+  .about-content h4 {
+    font-size: 20px;
+  }
+
+  .about-images {
+    flex-direction: column;
+  }
+}
+
+.vm-section {
+  background: #f3efe7;
+  padding: 50px 0px;
+  font-family: 'Poppins', sans-serif !important;
+}
+
+/* Each block */
+.vm-item {
+  display: flex;
+  gap: 25px;
+  align-items: flex-start;
+}
+
+/* Icon box */
+.vm-icon {
+  border: 2px solid #1c2c5b;
+  padding: 20px;
+  border-radius: 6px;
+  color: #1c2c5b;
+  flex-shrink: 0;
+}
+
+/* Content */
+.vm-content h2 {
+  font-size: 28px;
+  margin-bottom: 10px;
+  position: relative;
+}
+
+.vm-content h2::after {
+  content: "";
+  display: block;
+  width: 50px;
+  height: 3px;
+  background: #d4a017;
+  margin-top: 6px;
+}
+
+.vm-content p {
+  line-height: 1.7;
+}
+
+/* Divider */
+hr {
+  border: none;
+  border-top: 1px solid #ddd;
+  margin: 30px 0;
+}
+
+/* Tablet */
+@media (max-width: 768px) {
+  .vm-item {
+    flex-direction: column;
+  }
+
+  .vm-icon {
+    width: fit-content;
+  }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  .vm-section {
+    padding: 40px 15px;
+  }
+
+  .vm-content h2 {
+    font-size: 22px;
+  }
+
+  .vm-content p {
+    font-size: 14px;
+  }
+}

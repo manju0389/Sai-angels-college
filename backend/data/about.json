@@ -1,0 +1,24 @@
+[
+  {
+    "id": 1778828429314,
+    "name": "OUR FOUNDER'S MESSAGE",
+    "designation": "Chairmans",
+    "message": [
+      "Education is a slow & relentless process like the unfolding of a flower. both teachers and parents must co-operate to mould the students to make them ideal & responsible citizens of this country.",
+      "",
+      "The student of today may become leader of tomorrow. Only by the development of a reliable character the student can lead this country in future. Only those ideals are respected and remembered in gratitude for posterity."
+    ],
+    "image": "https://res.cloudinary.com/dydbq8bc5/image/upload/v1778828428/faculty/mx3qjdw3cjr6w8onj8gg.webp",
+    "public_id": "faculty/mx3qjdw3cjr6w8onj8gg"
+  },
+  {
+    "id": 1778828506104,
+    "name": "Sir",
+    "designation": "Principal",
+    "message": [
+      "Education is a slow & relentless process like the unfolding of a flower. both teachers and parents must co-operate to mould the students to make them ideal & responsible citizens of this country."
+    ],
+    "image": "https://res.cloudinary.com/dydbq8bc5/image/upload/v1778828505/faculty/ycdscuq4rnxlsji1i37r.webp",
+    "public_id": "faculty/ycdscuq4rnxlsji1i37r"
+  }
+]

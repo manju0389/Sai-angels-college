@@ -1,0 +1,91 @@
+/* Achievements Starts */
+.accordion {
+  max-width: 800px;
+  padding: 20px 0px;
+  margin: 20px auto;
+  border-radius: 8px;
+  overflow: hidden;
+  font-family: 'Poppins', sans-serif !important;
+}
+
+/* Each item */
+.accordion-item {
+  border-bottom: 2px solid #e5e5e5;
+}
+
+/* Header button */
+.accordion-header {
+  width: 100%;
+  padding: 16px 18px;
+  font-size: 16px;
+  font-weight: 600;
+  text-align: left;
+  background: #474b4e;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  color:#fff
+}
+
+/* Hover effect */
+.accordion-header:hover {
+  background: #ececec;
+  color:#0f172a
+}
+
+/* Add + / - icon */
+.accordion-header::after {
+  content: "+";
+  position: absolute;
+  right: 20px;
+  font-size: 20px;
+  transition: transform 0.3s ease;
+}
+
+/* Content wrapper */
+.accordion-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease, padding 0.3s ease;
+  padding: 0 15px;
+}
+
+/* Active content */
+.accordion-content.active {
+  max-height: 2000px;
+  padding: 15px;
+}
+
+/* Image styling */
+.accordion-content img {
+  width: 100%;
+  height: auto;
+  border-radius: 6px;
+  display: block;
+}
+
+/* 📱 Mobile responsive */
+@media (max-width: 768px) {
+  .accordion {
+    margin: 10px;
+  }
+
+  .accordion-header {
+    font-size: 16px;
+    padding: 14px;
+  }
+
+  .accordion-content.active {
+    padding: 10px;
+  }
+}
+
+/* 📱 Small phones */
+@media (max-width: 480px) {
+  .accordion-header {
+    font-size: 15px;
+    padding: 12px;
+  }
+}
