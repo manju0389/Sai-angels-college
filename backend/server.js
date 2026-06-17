@@ -24,8 +24,7 @@ connectDB();
 app.use(
   cors({
     origin: [
-      "http://localhost:5173",
-      "https://sai-angels-college.onrender.com",
+      "https://sai-angels-college-ysdr.onrender.com",
     ],
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
