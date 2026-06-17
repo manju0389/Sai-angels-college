@@ -23,6 +23,7 @@ app.use(
   cors({
     origin: [
       "http://localhost:5173",
+      "https://sai-angels-college-ysdr.onrender.com",
       "https://sai-angels-college.onrender.com",
     ],
     credentials: true,
