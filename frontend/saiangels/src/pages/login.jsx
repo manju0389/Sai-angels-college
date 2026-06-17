@@ -20,7 +20,7 @@ function Login() {
   e.preventDefault();
 
   try {
-    const res = await fetch("http://localhost:3000/api/auth/login", {
+    const res = await fetch("https://sai-angels-college.onrender.com/api/auth/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -30,6 +30,8 @@ function Login() {
 
     const data = await res.json();
 
+    console.log("LOGIN RESPONSE:", res.status, data); // 👈 ADD THIS
+    
     if (!res.ok) {
       alert(data.message);
       return;
