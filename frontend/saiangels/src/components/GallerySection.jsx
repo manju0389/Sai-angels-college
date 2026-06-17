@@ -2,27 +2,27 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import "../assets/css/gallery.css";
 
-const API = "http://localhost:3000/api/gallery";
+const API = "https://sai-angels-college.onrender.com/api/gallery";
 
 export default function HomeGallery() {
   const [images, setImages] = useState([]);
 
   useEffect(() => {
+    const fetchImages = async () => {
+      try {
+        const res = await axios.get(API);
+
+        // Take last 4 items safely
+        const firstFour = (res.data || []).slice(-4).reverse();
+
+        setImages(firstFour);
+      } catch (err) {
+        console.error("Gallery fetch error:", err);
+      }
+    };
+
     fetchImages();
   }, []);
-
-  const fetchImages = async () => {
-    try {
-      const res = await axios.get(API);
-
-      // Take only last 4 uploads
-      const firstFour = res.data.slice(-4).reverse();
-
-      setImages(firstFour);
-    } catch (err) {
-      console.error(err);
-    }
-  };
 
   return (
     <div className="bg-dark text-white">
@@ -36,14 +36,31 @@ export default function HomeGallery() {
         {/* Gallery Grid */}
         <div className="row">
           {images.map((img, index) => (
-            <div key={index} className="col-md-3 mb-4">
+            <div key={img.id || index} className="col-md-3 mb-4">
               <div className="gallery-item">
+
+                {/* IMAGE / VIDEO CHECK */}
                 {img.type === "video" ? (
-                  <video src={img.url} className="img-fluid" controls />
+                  <video
+                    src={img.url}
+                    className="img-fluid"
+                    controls
+                  />
                 ) : (
-                  <img src={img.url} alt={img.caption} className="img-fluid" />
+                  <img
+                    src={img.url}
+                    alt={img.caption || "gallery"}
+                    className="img-fluid"
+                    onError={(e) => {
+                      e.target.src =
+                        "https://via.placeholder.com/300x200?text=No+Image";
+                    }}
+                  />
                 )}
-                <p className="thumb-caption">{img.caption}</p>
+
+                <p className="thumb-caption">
+                  {img.caption || ""}
+                </p>
               </div>
             </div>
           ))}
