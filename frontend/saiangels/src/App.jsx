@@ -28,7 +28,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 function App() {
 
   useEffect(() => {
-    axios.get("http://localhost:3000/users")
+    axios.get("https://sai-angels-college.onrender.com/api/users")
       .then(res => console.log(res.data))
       .catch(err => console.log(err));
   }, []);
