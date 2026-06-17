@@ -2,14 +2,23 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import "../assets/css/achievements.css";
 
+const API = "https://sai-angels-college.onrender.com/api";
+
 export default function Achievements() {
   const [activeIndex, setActiveIndex] = useState(null);
   const [groupedData, setGroupedData] = useState({});
 
   useEffect(() => {
-    axios.get("http://localhost:3000/api/achievements")
-      .then(res => setGroupedData(res.data))
-      .catch(err => console.error(err));
+    const fetchAchievements = async () => {
+      try {
+        const res = await axios.get(`${API}/achievements`);
+        setGroupedData(res.data || {});
+      } catch (err) {
+        console.error("Achievements fetch error:", err);
+      }
+    };
+
+    fetchAchievements();
   }, []);
 
   const toggleAccordion = (index) => {
@@ -32,13 +41,29 @@ export default function Achievements() {
 
       {years.map((year, index) => (
         <div key={year} className="accordion-item">
-          <button className="accordion-header" onClick={() => toggleAccordion(index)}>
+          <button
+            className="accordion-header"
+            onClick={() => toggleAccordion(index)}
+          >
             Results {year}
           </button>
 
-          <div className={`accordion-content ${activeIndex === index ? "active" : ""}`}>
-            {groupedData[year].map(item => (
-              <img key={item.id} src={item.url} alt="" style={{ width: "100%", marginBottom: "10px" }}/>
+          <div
+            className={`accordion-content ${
+              activeIndex === index ? "active" : ""
+            }`}
+          >
+            {groupedData[year]?.map((item) => (
+              <img
+                key={item.id}
+                src={item.url}
+                alt=""
+                style={{ width: "100%", marginBottom: "10px" }}
+                onError={(e) => {
+                  e.target.src =
+                    "https://via.placeholder.com/600x400?text=No+Image";
+                }}
+              />
             ))}
           </div>
         </div>
