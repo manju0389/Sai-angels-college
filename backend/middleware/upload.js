@@ -4,66 +4,53 @@ const { Readable } = require("stream");
 
 // ================= MULTER =================
 const storage = multer.memoryStorage();
-
-const upload = multer({
-  storage,
-  limits: {
-    fileSize: 10 * 1024 * 1024, // 10MB limit
-  },
-});
+const upload = multer({ storage });
 
 // ================= CLOUDINARY UPLOAD =================
 /**
- * Upload buffer to Cloudinary (image/video auto-detect safe)
+ * Uploads a buffer to Cloudinary with automatic type detection
+ * and optional folder structure.
+ *
+ * @param {Buffer} buffer - File buffer
+ * @param {string} folder - Target folder in Cloudinary
+ * @param {string} mimetype - File mimetype
+ * @param {boolean} useSubfolder - Whether to add /images or /videos subfolder
+ * @returns {Promise<object>} - Cloudinary upload result
  */
-const uploadToCloudinary = (
-  buffer,
-  folder = "gallery",
-  mimetype,
-  useSubfolder = true
-) => {
+const uploadToCloudinary = (buffer, folder = "gallery", mimetype = "", useSubfolder = true) => {
   return new Promise((resolve, reject) => {
-    try {
-      let resource_type = "image";
-      let finalFolder = folder;
+    let resource_type = "image";
+    let finalFolder = folder;
 
-      // SAFE CHECK (prevents crash)
-      const type = mimetype || "";
-
-      if (useSubfolder) {
-        if (type.startsWith("video")) {
-          resource_type = "video";
-          finalFolder = `${folder}/videos`;
-        } else {
-          finalFolder = `${folder}/images`;
-        }
+    if (useSubfolder) {
+      if (mimetype.startsWith("video")) {
+        resource_type = "video";
+        finalFolder = `${folder}/videos`;
       } else {
-        resource_type = type.startsWith("video") ? "video" : "image";
-        finalFolder = folder;
+        finalFolder = `${folder}/images`;
       }
-
-      const stream = cloudinary.uploader.upload_stream(
-        {
-          resource_type,
-          folder: finalFolder,
-        },
-        (error, result) => {
-          if (error) return reject(error);
-          resolve(result);
-        }
-      );
-
-      const readable = new Readable();
-      readable.push(buffer);
-      readable.push(null);
-      readable.pipe(stream);
-    } catch (err) {
-      reject(err);
+    } else {
+      // Keep exactly as provided
+      resource_type = mimetype.startsWith("video") ? "video" : "image";
+      finalFolder = folder;
     }
+
+    const stream = cloudinary.uploader.upload_stream(
+      {
+        resource_type,
+        folder: finalFolder,
+      },
+      (error, result) => {
+        if (error) return reject(error);
+        resolve(result);
+      }
+    );
+
+    const readable = new Readable();
+    readable.push(buffer);
+    readable.push(null);
+    readable.pipe(stream);
   });
 };
 
-module.exports = {
-  upload,
-  uploadToCloudinary,
-};
+module.exports = { upload, uploadToCloudinary };
