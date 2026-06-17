@@ -1,137 +1,171 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
+
+const API = "https://sai-angels-college.onrender.com/api";
 
 const AdminAchievements = () => {
   const [files, setFiles] = useState([]);
   const [year, setYear] = useState("");
   const [grouped, setGrouped] = useState({});
 
-  const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
+  const [editingId, setEditingId] = useState(null);
+  const [editYear, setEditYear] = useState("");
+
+  useEffect(() => {
+    fetchAchievements();
+  }, []);
 
   const fetchAchievements = async () => {
     try {
-      const res = await axios.get("http://localhost:3000/api/achievements");
-      setGrouped(res.data);
+      const res = await axios.get(`${API}/achievements`);
+      setGrouped(res.data || {});
     } catch (err) {
       console.error(err);
     }
-  };
-
-  useEffect(() => fetchAchievements(), []);
-
-  const handleFilesChange = (e) => {
-    const selectedFiles = Array.from(e.target.files);
-    const oversized = selectedFiles.filter(f => f.size > MAX_FILE_SIZE);
-
-    if (oversized.length) {
-      alert(`These file(s) exceed 5 MB and will not be uploaded:\n${oversized.map(f => f.name).join(", ")}`);
-    }
-
-    // Only keep files <= 5 MB
-    const validFiles = selectedFiles.filter(f => f.size <= MAX_FILE_SIZE);
-    setFiles(validFiles);
   };
 
   const handleUpload = async () => {
-    if (!year.trim()) return alert("Enter year");
-    if (files.length === 0) return alert("Select files");
-
-    const formData = new FormData();
-    formData.append("year", year);
-    files.forEach(f => formData.append("files", f));
-
-    try {
-      await axios.post("http://localhost:3000/api/achievements/upload", formData, {
-        headers: { "Content-Type": "multipart/form-data" }
-      });
-      setFiles([]);
-      setYear("");
-      fetchAchievements();
-    } catch (err) {
-      console.error(err);
+    if (!year || files.length === 0) {
+      return alert("Fill all fields");
     }
+
+    const fd = new FormData();
+    fd.append("year", year);
+
+    files.forEach((f) => fd.append("files", f));
+
+    await axios.post(`${API}/achievements/upload`, fd, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+
+    setFiles([]);
+    setYear("");
+    fetchAchievements();
   };
 
-  const handleDeleteYear = async (yr) => {
-    if (!window.confirm(`Delete all achievements for ${yr}?`)) return;
-    try {
-      await axios.delete(`http://localhost:3000/api/achievements/${yr}`);
-      fetchAchievements();
-    } catch (err) {
-      console.error(err);
-    }
+  // ---------------- DELETE FIXED ----------------
+  const handleDelete = async (id) => {
+    if (!window.confirm("Delete this image?")) return;
+
+    await axios.delete(`${API}/achievements/${id}`);
+    fetchAchievements();
   };
 
-  const handleYearEdit = async (id, newYear) => {
-    try {
-      await axios.put(`http://localhost:3000/api/achievements/${id}/year`, { year: newYear });
-      fetchAchievements();
-    } catch (err) {
-      console.error(err);
-    }
+  // ---------------- EDIT ----------------
+  const handleEdit = (item) => {
+    setEditingId(item.id);
+    setEditYear(item.year);
   };
 
-  const sortedYears = Object.keys(grouped).sort((a, b) => parseInt(b, 10) - parseInt(a, 10));
+  const handleSave = async (id) => {
+    await axios.put(`${API}/achievements/${id}`, {
+      year: editYear,
+    });
+
+    setEditingId(null);
+    fetchAchievements();
+  };
 
   return (
-    <div>
+    <div className="container">
       <h4>Achievements Admin</h4>
 
       <input
-        type="text"
-        placeholder="Enter Year (e.g. 2024-25)"
         className="form-control my-2"
+        placeholder="Year"
         value={year}
         onChange={(e) => setYear(e.target.value)}
       />
 
       <input
         type="file"
-        name="files"
         multiple
-        className="form-control mb-2"
-        onChange={handleFilesChange}
+        className="form-control"
+        onChange={(e) => setFiles([...e.target.files])}
       />
 
-      <button className="btn btn-primary mb-4" onClick={handleUpload}>Upload</button>
+      <button className="btn btn-primary mt-2" onClick={handleUpload}>
+        Upload
+      </button>
 
-      <table className="table table-bordered">
+      <table className="table mt-4">
         <thead>
           <tr>
             <th>Year</th>
-            <th>No. of Files</th>
-            <th>Preview</th>
+            <th>Images</th>
             <th>Action</th>
           </tr>
         </thead>
+
         <tbody>
-          {sortedYears.map(yr => (
-            grouped[yr].map((item, idx) => (
-              <tr key={item.id}>
-                <td>
-                  <input
-                    type="text"
-                    value={item.year}
-                    onChange={(e) => handleYearEdit(item.id, e.target.value)}
-                    className="form-control"
-                  />
-                </td>
-                {idx === 0 && (
-                  <>
-                    <td rowSpan={grouped[yr].length}>{grouped[yr].length}</td>
+          {Object.keys(grouped)
+            .sort((a, b) => b - a)
+            .map((yr) =>
+              grouped[yr].map((item, idx) => (
+                <tr key={item.id}>
+                  <td>
+                    {editingId === item.id ? (
+                      <input
+                        className="form-control"
+                        value={editYear}
+                        onChange={(e) => setEditYear(e.target.value)}
+                      />
+                    ) : (
+                      item.year
+                    )}
+                  </td>
+
+                  {idx === 0 && (
                     <td rowSpan={grouped[yr].length}>
-                      {grouped[yr].slice(0,3).map(img => (
-                        <img key={img.id} src={img.url} width="50" height="50" style={{ objectFit: "cover", marginRight: "5px" }}/>
+                      {grouped[yr].slice(0, 3).map((img) => (
+                        <img
+                          key={img.id}
+                          src={img.url}
+                          width="60"
+                          height="60"
+                          style={{ marginRight: 5 }}
+                        />
                       ))}
                     </td>
-                    <td rowSpan={grouped[yr].length}>
-                      <button className="btn btn-danger btn-sm" onClick={() => handleDeleteYear(yr)}>Delete</button>
-                    </td>
-                  </>
-                )}
-              </tr>
-            ))
-          ))}
+                  )}
+
+                  <td>
+                    {editingId === item.id ? (
+                      <>
+                        <button
+                          className="btn btn-success btn-sm me-2"
+                          onClick={() => handleSave(item.id)}
+                        >
+                          Save
+                        </button>
+                        <button
+                          className="btn btn-secondary btn-sm"
+                          onClick={() => setEditingId(null)}
+                        >
+                          Cancel
+                        </button>
+                      </>
+                    ) : (
+                      <>
+                        <button
+                          className="btn btn-warning btn-sm me-2"
+                          onClick={() => handleEdit(item)}
+                        >
+                          Edit
+                        </button>
+
+                        <button
+                          className="btn btn-danger btn-sm"
+                          onClick={() => handleDelete(item.id)}
+                        >
+                          Delete
+                        </button>
+                      </>
+                    )}
+                  </td>
+                </tr>
+              ))
+            )}
         </tbody>
       </table>
     </div>
