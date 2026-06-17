@@ -1,4 +1,5 @@
 require("dotenv").config();
+
 const express = require("express");
 const cors = require("cors");
 const path = require("path");
@@ -11,11 +12,12 @@ const galleryRoutes = require("./routes/galleryRoutes");
 const achievementsRoutes = require("./routes/achievementsRoutes");
 const aboutRoutes = require("./routes/aboutRoutes");
 const homeRoutes = require("./routes/homeRoutes");
+
 const { verifyToken } = require("./middleware/authMiddleware");
 
 const app = express();
 
-// ================= MONGODB =================
+// ================= DATABASE =================
 connectDB();
 
 // ================= CORS =================
@@ -23,7 +25,6 @@ app.use(
   cors({
     origin: [
       "http://localhost:5173",
-      "https://sai-angels-college-ysdr.onrender.com",
       "https://sai-angels-college.onrender.com",
     ],
     credentials: true,
@@ -32,15 +33,12 @@ app.use(
   })
 );
 
-// ================= BODY PARSER =================
+// ================= MIDDLEWARE =================
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // ================= STATIC FILES =================
-app.use(
-  "/uploads",
-  express.static(path.join(__dirname, "uploads"))
-);
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // ================= ROUTES =================
 app.use("/api/videos", videoRoutes);
@@ -61,10 +59,7 @@ app.get("/api/protected", verifyToken, (req, res) => {
 // ================= ERROR HANDLER =================
 app.use((err, req, res, next) => {
   console.error("🔥 Server Error:", err.stack);
-
-  res.status(500).json({
-    message: "Internal Server Error",
-  });
+  res.status(500).json({ message: "Internal Server Error" });
 });
 
 // ================= START SERVER =================
@@ -73,5 +68,3 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
 });
-
-
