@@ -1,6 +1,8 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
 
+const API = "https://sai-angels-college.onrender.com/api";
+
 const AdminVideos = () => {
   const [videos, setVideos] = useState([]);
 
@@ -20,7 +22,7 @@ const AdminVideos = () => {
 
   const fetchVideos = async () => {
     try {
-      const res = await axios.get("http://localhost:3000/api/videos");
+      const res = await axios.get(`${API}/videos`);
       setVideos(res.data);
     } catch (err) {
       console.error("Error fetching videos:", err);
@@ -34,7 +36,7 @@ const AdminVideos = () => {
     }
 
     try {
-      await axios.post("http://localhost:3000/api/videos", form);
+      await axios.post(`${API}/videos`, form);
 
       setForm({ title: "", link: "", date: "" });
       fetchVideos();
@@ -49,7 +51,7 @@ const AdminVideos = () => {
     if (!window.confirm("Delete this video?")) return;
 
     try {
-      await axios.delete(`http://localhost:3000/api/videos/${id}`);
+      await axios.delete(`${API}/videos/${id}`);
       fetchVideos();
     } catch (err) {
       alert("Error deleting video");
@@ -61,7 +63,7 @@ const AdminVideos = () => {
     if (!newTitle.trim()) return alert("Enter title");
 
     try {
-      await axios.put(`http://localhost:3000/api/videos/${id}`, {
+      await axios.put(`${API}/videos/${id}`, {
         title: newTitle,
       });
 
