@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 function App() {
 
   useEffect(() => {
-    fetch('https://sai-angels-college-ysdr.onrender.com/')
+    fetch('https://sai-angels-college.onrender.com/')
       .then(res => res.text())
       .then(data => console.log(data));
   }, []);
