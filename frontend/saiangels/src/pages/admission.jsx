@@ -12,7 +12,7 @@ export default function Admission() {
   const formData = new FormData(e.target);
 
   try {
-    const response = await fetch("http://localhost/sent2.php", {
+    const response = await fetch("https://sai-angels-college.onrender.com/sent2.php", {
       method: "POST",
       body: formData
     });
