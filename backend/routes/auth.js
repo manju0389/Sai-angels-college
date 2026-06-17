@@ -3,8 +3,8 @@ const router = express.Router();
 
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-
 const User = require("../models/User");
+
 
 // ================= REGISTER =================
 router.post("/register", async (req, res) => {
@@ -17,23 +17,25 @@ router.post("/register", async (req, res) => {
       return res.status(400).json({ message: "User already exists" });
     }
 
-    const hashed = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(password, 10);
 
     const user = new User({
       username,
-      password: hashed,
+      password: hashedPassword,
     });
 
     await user.save();
 
-    res.json({ message: "User created" });
+    res.json({ message: "User created successfully" });
 
   } catch (err) {
+    console.log(err);
     res.status(500).json({ message: "Server error" });
   }
 });
 
-// ================= LOGIN (MONGODB VERSION) =================
+
+// ================= LOGIN =================
 router.post("/login", async (req, res) => {
   try {
     console.log("LOGIN BODY:", req.body);
@@ -58,7 +60,11 @@ router.post("/login", async (req, res) => {
       { expiresIn: "1d" }
     );
 
-    res.json({ token, user });
+    res.json({
+      message: "Login successful",
+      token,
+      user,
+    });
 
   } catch (err) {
     console.log(err);
