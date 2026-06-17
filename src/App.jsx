@@ -1,10 +1,9 @@
 import { useEffect } from 'react';
 
-const API = import.meta.env.VITE_API_URL;
-
 function App() {
+
   useEffect(() => {
-    fetch(`${API}/`)
+    fetch('http://localhost:5000/')
       .then(res => res.text())
       .then(data => console.log(data));
   }, []);
