@@ -3,6 +3,8 @@ const express = require("express");
 const cors = require("cors");
 const path = require("path");
 
+const connectDB = require("./config/db");
+
 const videoRoutes = require("./routes/videoRoutes");
 const authRoutes = require("./routes/auth");
 const galleryRoutes = require("./routes/galleryRoutes");
@@ -12,6 +14,9 @@ const homeRoutes = require("./routes/homeRoutes");
 const { verifyToken } = require("./middleware/authMiddleware");
 
 const app = express();
+
+// ================= DATABASE =================
+connectDB();
 
 // ================= CORS =================
 app.use(
@@ -28,7 +33,7 @@ allowedHeaders: ["Content-Type", "Authorization"],
 );
 
 
-// ================= BODY PARSER =================
+// ================= MIDDLEWARE =================
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
