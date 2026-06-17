@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 function App() {
 
   useEffect(() => {
-    fetch('http://localhost:5000/')
+    fetch('https://sai-angels-college-ysdr.onrender.com/')
       .then(res => res.text())
       .then(data => console.log(data));
   }, []);
