@@ -9,7 +9,7 @@ export default function Contact() {
   const formData = new FormData(e.target);
 
   try {
-    const response = await fetch("http://localhost/sent1.php", {
+    const response = await fetch("https://sai-angels-college.onrender.com/sent1.php", {
       method: "POST",
       body: formData
     });
