@@ -1,117 +1,133 @@
-const fs = require("fs");
-const path = require("path");
-const { uploadToCloudinary } = require("../middleware/upload");
 const cloudinary = require("../config/cloudinary");
+const { uploadToCloudinary } = require("../middleware/upload");
 
-const DB_FILE = path.join(__dirname, "../data/about.json");
+const About = require("../models/About");
 
-// ------------------- Helpers -------------------
-const readData = () => {
-  try {
-    if (!fs.existsSync(DB_FILE)) return [];
-    const file = fs.readFileSync(DB_FILE, "utf-8");
-    return file ? JSON.parse(file) : [];
-  } catch {
-    return [];
-  }
+// ================= UPLOAD HELPER =================
+const uploadImage = async (file) => {
+  if (!file) return null;
+
+  const result = await uploadToCloudinary(
+    file.buffer,
+    "faculty",
+    file.mimetype,
+    false
+  );
+
+  return {
+    url: result.secure_url,
+    id: result.public_id,
+  };
 };
 
-const writeData = (data) => {
-  const dir = path.dirname(DB_FILE);
-  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-  fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2));
-};
-
-// ------------------- CREATE -------------------
+// ================= CREATE =================
 exports.createAbout = async (req, res) => {
   try {
     const { name, designation, message } = req.body;
-    if (!req.file) return res.status(400).json({ error: "Image required" });
 
-    const result = await uploadToCloudinary(req.file.buffer, "faculty", req.file.mimetype, false);
+    if (!req.file) {
+      return res.status(400).json({ error: "Image required" });
+    }
 
-    const newItem = {
-      id: Date.now(),
+    const uploaded = await uploadImage(req.file);
+
+    const about = await About.create({
       name,
       designation,
-      message: typeof message === "string" ? JSON.parse(message || "[]") : message || [],
-      image: result.secure_url,
-      public_id: result.public_id,
-    };
+      message:
+        typeof message === "string"
+          ? JSON.parse(message || "[]")
+          : message || [],
+      image: uploaded.url,
+      public_id: uploaded.id,
+    });
 
-    const data = readData();
-    data.push(newItem);
-    writeData(data);
-
-    res.json({ message: "Added", data: newItem });
+    res.json({ message: "Added", data: about });
   } catch (err) {
-    console.error(err);
     res.status(500).json({ error: err.message });
   }
 };
 
-// ------------------- GET -------------------
-exports.getAbout = (req, res) => {
-  res.json(readData());
+// ================= GET =================
+exports.getAbout = async (req, res) => {
+  try {
+    const data = await About.find().sort({ createdAt: -1 });
+    res.json(data);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 };
 
-// ------------------- UPDATE -------------------
+// ================= UPDATE =================
 exports.updateAbout = async (req, res) => {
   try {
-    const id = parseInt(req.params.id);
+    const { id } = req.params;
     const { name, designation, message } = req.body;
 
-    let data = readData();
-    const index = data.findIndex((i) => i.id === id);
-    if (index === -1) return res.status(404).json({ error: "Not found" });
+    const about = await About.findById(id);
 
-    if (name) data[index].name = name;
-    if (designation) data[index].designation = designation;
-    if (message) {
-      data[index].message = typeof message === "string" ? JSON.parse(message || "[]") : message;
+    if (!about) {
+      return res.status(404).json({ error: "Not found" });
     }
 
-    // If new image uploaded → replace on Cloudinary
+    let image = about.image;
+    let public_id = about.public_id;
+
+    // update image if new file uploaded
     if (req.file) {
-      // Delete old image if exists
-      if (data[index].public_id) {
-        await cloudinary.uploader.destroy(data[index].public_id, { resource_type: "image" });
+      if (about.public_id) {
+        await cloudinary.uploader.destroy(about.public_id, {
+          resource_type: "image",
+        });
       }
 
-      const result = await uploadToCloudinary(req.file.buffer, "faculty", req.file.mimetype, false);
-      data[index].image = result.secure_url;
-      data[index].public_id = result.public_id;
+      const uploaded = await uploadImage(req.file);
+      image = uploaded.url;
+      public_id = uploaded.id;
     }
 
-    writeData(data);
-    res.json({ message: "Updated", data: data[index] });
+    const updated = await About.findByIdAndUpdate(
+      id,
+      {
+        name: name || about.name,
+        designation: designation || about.designation,
+        message:
+          typeof message === "string"
+            ? JSON.parse(message || "[]")
+            : message || about.message,
+        image,
+        public_id,
+      },
+      { new: true }
+    );
+
+    res.json({ message: "Updated", data: updated });
   } catch (err) {
-    console.error(err);
     res.status(500).json({ error: err.message });
   }
 };
 
-// ------------------- DELETE -------------------
+// ================= DELETE =================
 exports.deleteAbout = async (req, res) => {
   try {
-    const id = parseInt(req.params.id);
-    let data = readData();
-    const index = data.findIndex((i) => i.id === id);
+    const { id } = req.params;
 
-    if (index === -1) return res.status(404).json({ error: "Not found" });
+    const about = await About.findById(id);
 
-    // Delete image from Cloudinary
-    if (data[index].public_id) {
-      await cloudinary.uploader.destroy(data[index].public_id, { resource_type: "image" });
+    if (!about) {
+      return res.status(404).json({ error: "Not found" });
     }
 
-    // Remove from JSON
-    data.splice(index, 1);
-    writeData(data);
+    if (about.public_id) {
+      await cloudinary.uploader.destroy(about.public_id, {
+        resource_type: "image",
+      });
+    }
+
+    await About.findByIdAndDelete(id);
 
     res.json({ message: "Deleted" });
   } catch (err) {
-    console.error(err);
     res.status(500).json({ error: err.message });
   }
 };

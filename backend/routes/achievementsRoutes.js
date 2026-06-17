@@ -1,21 +1,24 @@
 const express = require("express");
 const router = express.Router();
 const { upload } = require("../middleware/upload");
+
 const {
   uploadAchievements,
   getAchievements,
-  deleteAchievementsByYear,
-  updateAchievementYear
+  deleteAchievementById,
+  updateAchievementYear,
 } = require("../controllers/achievementsController");
 
-// Wrap Multer to catch file size errors
+// safe multer wrapper
 const handleUploadMiddleware = (req, res, next) => {
   upload.array("files")(req, res, (err) => {
     if (err) {
-      if (err.code === "LIMIT_FILE_SIZE") {
-        return res.status(400).json({ message: "File too large (max 5 MB)" });
-      }
-      return res.status(400).json({ message: err.message });
+      return res.status(400).json({
+        message:
+          err.code === "LIMIT_FILE_SIZE"
+            ? "File too large (max 5 MB)"
+            : err.message,
+      });
     }
     next();
   });
@@ -23,7 +26,11 @@ const handleUploadMiddleware = (req, res, next) => {
 
 router.get("/", getAchievements);
 router.post("/upload", handleUploadMiddleware, uploadAchievements);
-router.delete("/:year", deleteAchievementsByYear);
-router.put("/:id/year", updateAchievementYear);
+
+// ✅ IMPORTANT: single image delete
+router.delete("/:id", deleteAchievementById);
+
+// update year
+router.put("/:id", updateAchievementYear);
 
 module.exports = router;

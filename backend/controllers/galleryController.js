@@ -1,106 +1,106 @@
-const fs = require("fs");
-const path = require("path");
-const { uploadToCloudinary } = require("../middleware/upload");
 const cloudinary = require("../config/cloudinary");
+const { uploadToCloudinary } = require("../middleware/upload");
 
-const DB_FILE = path.join(__dirname, "../data/gallery.json");
+const Gallery = require("../models/Gallery");
 
-// -------------------- Read / Write JSON --------------------
-const readData = () => {
-  if (!fs.existsSync(DB_FILE)) return [];
-  const file = fs.readFileSync(DB_FILE, "utf-8");
-  return file ? JSON.parse(file) : [];
-};
-
-const writeData = (data) => {
-  const dir = path.dirname(DB_FILE);
-  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-  fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2));
-};
-
-// -------------------- UPLOAD --------------------
+// ================= UPLOAD =================
 exports.uploadGallery = async (req, res) => {
   try {
     const { caption } = req.body;
     const files = req.files;
 
-    if (!files?.length) return res.status(400).json({ error: "No files uploaded" });
+    if (!files || files.length === 0) {
+      return res.status(400).json({ error: "No files uploaded" });
+    }
 
-    const uploaded = [];
+    const uploadedItems = [];
 
     for (const file of files) {
-      // Detects type automatically and stores in subfolder (images/videos)
-      const result = await uploadToCloudinary(file.buffer, "gallery", file.mimetype);
+      const result = await uploadToCloudinary(
+        file.buffer,
+        "gallery",
+        file.mimetype
+      );
 
-      uploaded.push({
-        id: result.public_id,   // Needed for deletion
+      const item = await Gallery.create({
         url: result.secure_url,
-        caption,
-        type: result.resource_type, // 'image' or 'video'
+        caption: caption || "",
+        public_id: result.public_id,
+        type: result.resource_type,
       });
+
+      uploadedItems.push(item);
     }
 
-    const existing = readData();
-    writeData([...existing, ...uploaded]);
-
-    res.json({ message: "Uploaded successfully", data: uploaded });
+    res.json({
+      message: "Uploaded successfully",
+      data: uploadedItems,
+    });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: err.message });
   }
 };
 
-// -------------------- GET --------------------
-exports.getGallery = (req, res) => {
-  res.json(readData());
+// ================= GET =================
+exports.getGallery = async (req, res) => {
+  try {
+    const data = await Gallery.find().sort({ createdAt: -1 });
+    res.json(data);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 };
 
-// -------------------- UPDATE CAPTION --------------------
-exports.updateCaption = (req, res) => {
+// ================= UPDATE CAPTION =================
+exports.updateCaption = async (req, res) => {
   try {
-    const oldCaption = decodeURIComponent(req.params.caption);
-    const { caption: newCaption } = req.body;
+    const { id } = req.params;
+    const { caption } = req.body;
 
-    if (!newCaption || !newCaption.trim())
+    if (!caption) {
       return res.status(400).json({ error: "New caption required" });
+    }
 
-    const data = readData();
-
-    const updated = data.map((item) =>
-      item.caption === oldCaption ? { ...item, caption: newCaption } : item
+    const updated = await Gallery.findByIdAndUpdate(
+      id,
+      { caption },
+      { new: true }
     );
 
-    writeData(updated);
-    res.json({ message: "Caption updated successfully" });
+    if (!updated) {
+      return res.status(404).json({ error: "Not found" });
+    }
+
+    res.json({ message: "Caption updated", item: updated });
   } catch (err) {
-    console.error(err);
     res.status(500).json({ error: err.message });
   }
 };
 
-// -------------------- DELETE --------------------
+// ================= DELETE =================
 exports.deleteByCaption = async (req, res) => {
   try {
-    const caption = decodeURIComponent(req.params.caption);
-    const data = readData();
+    const { caption } = req.params;
 
-    // Delete from Cloudinary first
-    const toDelete = data.filter((img) => img.caption === caption);
-    for (const img of toDelete) {
-      if (img.id) {
-        // Cloudinary resource_type must be 'image' or 'video'
-        const type = img.type === "video" ? "video" : "image";
-        await cloudinary.uploader.destroy(img.id, { resource_type: type });
-      }
+    const items = await Gallery.find({ caption });
+
+    if (!items.length) {
+      return res.status(404).json({ error: "Not found" });
     }
 
-    // Remove from JSON
-    const filtered = data.filter((img) => img.caption !== caption);
-    writeData(filtered);
+    for (const item of items) {
+      if (item.public_id) {
+        await cloudinary.uploader.destroy(item.public_id, {
+          resource_type: item.type === "video" ? "video" : "image",
+        });
+      }
+
+      await Gallery.findByIdAndDelete(item._id);
+    }
 
     res.json({ message: "Deleted successfully" });
   } catch (err) {
-    console.error(err);
     res.status(500).json({ error: err.message });
   }
 };

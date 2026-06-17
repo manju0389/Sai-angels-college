@@ -3,6 +3,8 @@ const express = require("express");
 const cors = require("cors");
 const path = require("path");
 
+const connectDB = require("./config/db");
+
 const videoRoutes = require("./routes/videoRoutes");
 const authRoutes = require("./routes/auth");
 const galleryRoutes = require("./routes/galleryRoutes");
@@ -13,17 +15,21 @@ const { verifyToken } = require("./middleware/authMiddleware");
 
 const app = express();
 
+// ================= MONGODB =================
+connectDB();
+
 // ================= CORS =================
 app.use(
-cors({
-origin: [
-"http://localhost:5173",
-"https://sai-angels-college-ysdr.onrender.com"
-],
-credentials: true,
-methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-allowedHeaders: ["Content-Type", "Authorization"],
-})
+  cors({
+    origin: [
+      "http://localhost:5173",
+      "https://sai-angels-college-ysdr.onrender.com",
+      "https://sai-angels-college.onrender.com",
+    ],
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
 );
 
 // ================= BODY PARSER =================
@@ -32,8 +38,8 @@ app.use(express.urlencoded({ extended: true }));
 
 // ================= STATIC FILES =================
 app.use(
-"/uploads",
-express.static(path.join(__dirname, "uploads"))
+  "/uploads",
+  express.static(path.join(__dirname, "uploads"))
 );
 
 // ================= ROUTES =================
@@ -46,20 +52,26 @@ app.use("/api", homeRoutes);
 
 // ================= PROTECTED ROUTE =================
 app.get("/api/protected", verifyToken, (req, res) => {
-res.json({ message: "You are authorized!", user: req.user });
+  res.json({
+    message: "You are authorized!",
+    user: req.user,
+  });
 });
 
 // ================= ERROR HANDLER =================
 app.use((err, req, res, next) => {
-console.error("🔥 Server Error:", err.stack);
-res.status(500).json({
-message: "Internal Server Error",
-});
+  console.error("🔥 Server Error:", err.stack);
+
+  res.status(500).json({
+    message: "Internal Server Error",
+  });
 });
 
 // ================= START SERVER =================
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
-console.log(`🚀 Server running on port ${PORT}`);
+  console.log(`🚀 Server running on port ${PORT}`);
 });
+
+
