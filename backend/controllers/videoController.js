@@ -1,76 +1,69 @@
-const Video = require("../models/Video");
+const fs = require("fs");
+const path = require("path");
 
-// ================= GET =================
-exports.getVideos = async (req, res) => {
-  try {
-    const videos = await Video.find().sort({ createdAt: -1 });
-    res.json(videos);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
+const DB_FILE = path.join(__dirname, "../videos.json");
+
+const readVideos = () => {
+  if (!fs.existsSync(DB_FILE)) return [];
+  return JSON.parse(fs.readFileSync(DB_FILE));
 };
 
-// ================= ADD =================
-exports.addVideo = async (req, res) => {
-  try {
-    const { title, link, date } = req.body;
-
-    const match = link.match(
-      /(?:v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/
-    );
-
-    if (!match) {
-      return res.status(400).json({ message: "Invalid link" });
-    }
-
-    const video = await Video.create({
-      title,
-      videoId: match[1],
-      date,
-    });
-
-    res.json(video);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
+const saveVideos = (data) => {
+  fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2));
 };
 
-// ================= DELETE =================
-exports.deleteVideo = async (req, res) => {
-  try {
-    const { id } = req.params;
-
-    const video = await Video.findById(id);
-
-    if (!video) {
-      return res.status(404).json({ message: "Video not found" });
-    }
-
-    await Video.findByIdAndDelete(id);
-
-    res.json({ message: "Deleted" });
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
+// GET
+exports.getVideos = (req, res) => {
+  res.json(readVideos());
 };
 
-// ================= UPDATE TITLE =================
-exports.updateVideoTitle = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const { title } = req.body;
+// ADD
+exports.addVideo = (req, res) => {
+  const { title, link, date } = req.body;
 
-    const video = await Video.findById(id);
+  const match = link.match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+  if (!match) return res.status(400).json({ message: "Invalid link" });
 
-    if (!video) {
-      return res.status(404).json({ message: "Video not found" });
-    }
+  const newVideo = {
+    _id: Date.now().toString(),
+    title,
+    videoId: match[1],
+    date,
+  };
 
-    video.title = title;
-    await video.save();
+  const videos = readVideos();
+  videos.push(newVideo);
+  saveVideos(videos);
 
-    res.json({ message: "Updated", video });
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
+  res.json(newVideo);
+};
+
+// DELETE
+exports.deleteVideo = (req, res) => {
+  let videos = readVideos();
+
+  videos = videos.filter((v) => v._id !== req.params.id);
+
+  saveVideos(videos);
+
+  res.json({ message: "Deleted" });
+};
+
+// UPDATE TITLE ⭐ IMPORTANT
+exports.updateVideoTitle = (req, res) => {
+  const { id } = req.params;
+  const { title } = req.body;
+
+  const videos = readVideos();
+
+  const index = videos.findIndex((v) => v._id === id);
+
+  if (index === -1)
+    return res.status(404).json({ message: "Video not found" });
+
+  videos[index].title = title;
+
+  saveVideos(videos);
+
+  res.json({ message: "Updated", video: videos[index] });
 };
