@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 
+const API = "https://sai-angels-college.onrender.com/api";
+
 export default function Adminabout() {
   const [form, setForm] = useState({ name: "", designation: "", message: "", image: null });
   const [data, setData] = useState([]);
@@ -7,11 +9,14 @@ export default function Adminabout() {
   const [editForm, setEditForm] = useState({ name: "", designation: "", message: "", image: null, preview: null });
 
   // Fetch data
-  const fetchData = () => {
-    fetch("http://localhost:3000/api/about")
-      .then(res => res.json())
-      .then(setData)
-      .catch(console.error);
+   const fetchData = async () => {
+    try {
+      const res = await fetch(`${API}/about`);
+      const json = await res.json();
+      setData(json);
+    } catch (err) {
+      console.error("Fetch error:", err);
+    }
   };
 
   useEffect(() => fetchData(), []);
@@ -27,7 +32,7 @@ export default function Adminabout() {
     formData.append("message", JSON.stringify(form.message.split("\n")));
     formData.append("image", form.image);
 
-    await fetch("http://localhost:3000/api/about", { method: "POST", body: formData });
+    await fetch(`${API}/about`, { method: "POST", body: formData });
     setForm({ name: "", designation: "", message: "", image: null });
     fetchData();
   };
@@ -35,7 +40,7 @@ export default function Adminabout() {
   // DELETE
   const handleDelete = async id => {
     if (!window.confirm("Delete this entry?")) return;
-    await fetch(`http://localhost:3000/api/about/${id}`, { method: "DELETE" });
+    await fetch(`${API}/about/${id}`, { method: "DELETE" });
     fetchData();
   };
 
@@ -67,7 +72,7 @@ export default function Adminabout() {
     formData.append("message", JSON.stringify(editForm.message.split("\n")));
     if (editForm.image) formData.append("image", editForm.image);
 
-    await fetch(`http://localhost:3000/api/about/${id}`, { method: "PUT", body: formData });
+    await fetch(`${API}/about/${id}`, { method: "PUT", body: formData });
 
     setEditId(null);
     fetchData();
