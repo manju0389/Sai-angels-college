@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-const API = "http://localhost:3000/api";
+const API = "https://sai-angels-college.onrender.com/api";
 
 const Home = () => {
   // ===================== STATES =====================
