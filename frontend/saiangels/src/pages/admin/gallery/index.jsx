@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 
-const API = "http://localhost:3000/api/gallery";
+const API = "https://sai-angels-college.onrender.com/api/gallery";
 
 export default function AdminGallery() {
   const [images, setImages] = useState([]);
@@ -10,16 +10,17 @@ export default function AdminGallery() {
   const [editCaption, setEditCaption] = useState(null);
   const [newCaption, setNewCaption] = useState("");
 
-  useEffect(() => fetchImages(), []);
+  useEffect(() => {
+    fetchImages();
+  }, []);
 
   const fetchImages = async () => {
     const res = await axios.get(API);
-    setImages(res.data);
+    setImages(res.data || []);
   };
 
   const handleFileChange = (e) => {
-    const selectedFiles = Array.from(e.target.files);
-    setFiles(selectedFiles);
+    setFiles(Array.from(e.target.files));
   };
 
   const handleUpload = async () => {
@@ -31,6 +32,7 @@ export default function AdminGallery() {
     files.forEach((f) => formData.append("files", f));
 
     await axios.post(`${API}/upload`, formData);
+
     setCaption("");
     setFiles([]);
     fetchImages();
@@ -38,7 +40,12 @@ export default function AdminGallery() {
 
   const handleUpdateCaption = async (oldCap) => {
     if (!newCaption.trim()) return alert("Enter new caption");
-    await axios.put(`${API}/${encodeURIComponent(oldCap)}`, { caption: newCaption });
+
+    await axios.put(
+      `${API}/${encodeURIComponent(oldCap)}`,
+      { caption: newCaption }
+    );
+
     setEditCaption(null);
     setNewCaption("");
     fetchImages();
@@ -46,13 +53,13 @@ export default function AdminGallery() {
 
   const handleDelete = async (cap) => {
     if (!window.confirm(`Delete "${cap}"?`)) return;
+
     await axios.delete(`${API}/${encodeURIComponent(cap)}`);
     fetchImages();
   };
 
-  // Group by caption
   const grouped = images.reduce((acc, img) => {
-    acc[img.caption] = acc[img.caption] || [];
+    if (!acc[img.caption]) acc[img.caption] = [];
     acc[img.caption].push(img);
     return acc;
   }, {});
@@ -68,8 +75,17 @@ export default function AdminGallery() {
         value={caption}
         onChange={(e) => setCaption(e.target.value)}
       />
-      <input type="file" multiple className="form-control mb-2" onChange={handleFileChange} />
-      <button className="btn btn-primary mb-3" onClick={handleUpload}>Upload</button>
+
+      <input
+        type="file"
+        multiple
+        className="form-control mb-2"
+        onChange={handleFileChange}
+      />
+
+      <button className="btn btn-primary mb-3" onClick={handleUpload}>
+        Upload
+      </button>
 
       {/* Table */}
       <table className="table table-bordered">
@@ -81,30 +97,75 @@ export default function AdminGallery() {
             <th>Actions</th>
           </tr>
         </thead>
+
         <tbody>
           {Object.keys(grouped).map((cap) => (
             <tr key={cap}>
               <td>
                 {editCaption === cap ? (
-                  <input className="form-control" value={newCaption} onChange={(e) => setNewCaption(e.target.value)} />
-                ) : cap}
+                  <input
+                    className="form-control"
+                    value={newCaption}
+                    onChange={(e) => setNewCaption(e.target.value)}
+                  />
+                ) : (
+                  cap
+                )}
               </td>
+
               <td>{grouped[cap].length}</td>
+
               <td>
                 {grouped[cap].slice(0, 3).map((img, i) => (
-                  <img key={i} src={img.url} width="50" height="50" style={{ marginRight: "5px", objectFit: "cover" }} />
+                  <img
+                    key={i}
+                    src={img.url}
+                    width="50"
+                    height="50"
+                    style={{ marginRight: 5, objectFit: "cover" }}
+                    alt=""
+                  />
                 ))}
               </td>
+
               <td>
                 {editCaption === cap ? (
                   <>
-                    <button className="btn btn-success btn-sm me-2" onClick={() => handleUpdateCaption(cap)}>Save</button>
-                    <button className="btn btn-secondary btn-sm" onClick={() => { setEditCaption(null); setNewCaption(""); }}>Cancel</button>
+                    <button
+                      className="btn btn-success btn-sm me-2"
+                      onClick={() => handleUpdateCaption(cap)}
+                    >
+                      Save
+                    </button>
+
+                    <button
+                      className="btn btn-secondary btn-sm"
+                      onClick={() => {
+                        setEditCaption(null);
+                        setNewCaption("");
+                      }}
+                    >
+                      Cancel
+                    </button>
                   </>
                 ) : (
                   <>
-                    <button className="btn btn-warning btn-sm me-2" onClick={() => { setEditCaption(cap); setNewCaption(cap); }}>Edit</button>
-                    <button className="btn btn-danger btn-sm" onClick={() => handleDelete(cap)}>Delete</button>
+                    <button
+                      className="btn btn-warning btn-sm me-2"
+                      onClick={() => {
+                        setEditCaption(cap);
+                        setNewCaption(cap);
+                      }}
+                    >
+                      Edit
+                    </button>
+
+                    <button
+                      className="btn btn-danger btn-sm"
+                      onClick={() => handleDelete(cap)}
+                    >
+                      Delete
+                    </button>
                   </>
                 )}
               </td>
