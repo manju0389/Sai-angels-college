@@ -1,67 +1,49 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
+const API = "https://sai-angels-college.onrender.com/api";
+
 export default function RankCarousel() {
   const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(true);
+
   const currentYear = new Date().getFullYear();
   const previousYear = currentYear - 1;
 
-  const API = "http://localhost:3000/api/student";
-
-  // ================= IMAGE HELPER =================
-  const getImageUrl = (img) => {
-    if (!img || img === "undefined" || img === "null") {
-      return "https://via.placeholder.com/200x200?text=No+Image";
-    }
-
-    return img; // Cloudinary URL
-  };
-
-  // ================= FETCH =================
-  const fetchStudents = async () => {
-    try {
-      const res = await axios.get(API);
-      setStudents(res.data || []);
-    } catch (err) {
-      console.error("Error loading students:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
+  // FETCH
   useEffect(() => {
+    const fetchStudents = async () => {
+      try {
+        const res = await axios.get(`${API}/student`);
+        setStudents(res.data || []);
+      } catch (err) {
+        console.error("Error loading students:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchStudents();
   }, []);
 
-  // ================= GROUP STUDENTS =================
+  // GROUP INTO SLIDES (4 per slide)
   const chunkSize = 4;
   const slides = [];
 
   for (let i = 0; i < students.length; i += chunkSize) {
-    slides.push(
-      students.slice(i, i + chunkSize)
-    );
+    slides.push(students.slice(i, i + chunkSize));
   }
 
-  // ================= LOADING =================
+  // LOADING
   if (loading) {
-    return (
-      <p className="text-center">
-        Loading...
-      </p>
-    );
+    return <p className="text-center">Loading...</p>;
   }
 
+  // EMPTY STATE
   if (!students.length) {
-    return (
-      <p className="text-center">
-        No students found
-      </p>
-    );
+    return <p className="text-center">No students found</p>;
   }
 
-  // ================= UI =================
   return (
     <section className="rank-section container-fluid mb-5">
       <div className="container text-center">
@@ -70,9 +52,7 @@ export default function RankCarousel() {
           Our College Rank Holders ({previousYear} - {currentYear})
         </h2>
 
-        <p className="subtitle">
-          Congratulations
-        </p>
+        <p className="subtitle">Congratulations</p>
 
         <div
           id="rankCarousel"
@@ -82,77 +62,49 @@ export default function RankCarousel() {
         >
           <div className="carousel-inner">
 
-            {slides.map(
-              (group, slideIndex) => (
-                <div
-                  key={slideIndex}
-                  className={`carousel-item ${
-                    slideIndex === 0
-                      ? "active"
-                      : ""
-                  }`}
-                >
-                  <div className="row justify-content-center">
+            {slides.map((group, slideIndex) => (
+              <div
+                key={slideIndex}
+                className={`carousel-item ${slideIndex === 0 ? "active" : ""}`}
+              >
+                <div className="row justify-content-center">
 
-                    {group.map(
-                      (student) => (
-                        <div
-                          key={
-                            student.id ||
-                            student._id
-                          }
-                          className="col-md-3 col-12 mb-4"
-                        >
-                          <div className="student-card">
+                  {group.map((student) => (
+                    <div
+                      key={student.id || student._id}
+                      className="col-md-3 col-12 mb-4"
+                    >
+                      <div className="student-card">
 
-                            <img
-                              src={getImageUrl(
-                                student.image
-                              )}
-                              alt={
-                                student.name
-                              }
-                              onError={(e) => {
-                                e.target.src =
-                                  "https://via.placeholder.com/200x200?text=No+Image";
-                              }}
-                            />
+                        <img
+                          src={student.image}
+                          alt={student.name}
+                          onError={(e) => {
+                            e.target.src =
+                              "https://via.placeholder.com/200x200?text=No+Image";
+                          }}
+                        />
 
-                            <h5>
-                              {
-                                student.name
-                              }
-                            </h5>
+                        <h5>{student.name}</h5>
+                        <p>({student.stream})</p>
 
-                            <p>
-                              (
-                              {
-                                student.stream
-                              }
-                              )
-                            </p>
+                        <span className="rank">
+                          {student.rank}
+                        </span>
 
-                            <span className="rank">
-                              {
-                                student.rank
-                              }
-                            </span>
+                      </div>
+                    </div>
+                  ))}
 
-                          </div>
-                        </div>
-                      )
-                    )}
-
-                  </div>
                 </div>
-              )
-            )}
+              </div>
+            ))}
 
           </div>
 
           <hr />
 
-          {/* Show controls only if multiple slides */}
+          {/* CONTROLS */}
           {slides.length > 1 && (
             <>
               <button
