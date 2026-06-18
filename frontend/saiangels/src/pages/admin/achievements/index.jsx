@@ -43,7 +43,7 @@ const AdminAchievements = () => {
     fetchAchievements();
   };
 
-  // ---------------- DELETE FIXED ----------------
+  // ---------------- DELETE ----------------
   const handleDelete = async (id) => {
     if (!window.confirm("Delete this image?")) return;
 
@@ -53,7 +53,7 @@ const AdminAchievements = () => {
 
   // ---------------- EDIT ----------------
   const handleEdit = (item) => {
-    setEditingId(item.id);
+    setEditingId(item._id);
     setEditYear(item.year);
   };
 
@@ -63,6 +63,7 @@ const AdminAchievements = () => {
     });
 
     setEditingId(null);
+    setEditYear("");
     fetchAchievements();
   };
 
@@ -102,9 +103,10 @@ const AdminAchievements = () => {
             .sort((a, b) => b - a)
             .map((yr) =>
               grouped[yr].map((item, idx) => (
-                <tr key={item.id}>
+                <tr key={item._id}>
+                  {/* YEAR */}
                   <td>
-                    {editingId === item.id ? (
+                    {editingId === item._id ? (
                       <input
                         className="form-control"
                         value={editYear}
@@ -115,32 +117,38 @@ const AdminAchievements = () => {
                     )}
                   </td>
 
+                  {/* IMAGE GROUP */}
                   {idx === 0 && (
                     <td rowSpan={grouped[yr].length}>
                       {grouped[yr].slice(0, 3).map((img) => (
                         <img
-                          key={img.id}
+                          key={img._id}
                           src={img.url}
                           width="60"
                           height="60"
                           style={{ marginRight: 5 }}
+                          alt="achievement"
                         />
                       ))}
                     </td>
                   )}
 
+                  {/* ACTIONS */}
                   <td>
-                    {editingId === item.id ? (
+                    {editingId === item._id ? (
                       <>
                         <button
                           className="btn btn-success btn-sm me-2"
-                          onClick={() => handleSave(item.id)}
+                          onClick={() => handleSave(item._id)}
                         >
                           Save
                         </button>
                         <button
                           className="btn btn-secondary btn-sm"
-                          onClick={() => setEditingId(null)}
+                          onClick={() => {
+                            setEditingId(null);
+                            setEditYear("");
+                          }}
                         >
                           Cancel
                         </button>
@@ -156,7 +164,7 @@ const AdminAchievements = () => {
 
                         <button
                           className="btn btn-danger btn-sm"
-                          onClick={() => handleDelete(item.id)}
+                          onClick={() => handleDelete(item._id)}
                         >
                           Delete
                         </button>
