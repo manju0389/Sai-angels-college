@@ -7,7 +7,8 @@ export default function AdminGallery() {
   const [images, setImages] = useState([]);
   const [caption, setCaption] = useState("");
   const [files, setFiles] = useState([]);
-  const [editCaption, setEditCaption] = useState(null);
+
+  const [editId, setEditId] = useState(null);
   const [newCaption, setNewCaption] = useState("");
 
   useEffect(() => {
@@ -23,6 +24,7 @@ export default function AdminGallery() {
     setFiles(Array.from(e.target.files));
   };
 
+  // UPLOAD
   const handleUpload = async () => {
     if (!caption.trim()) return alert("Enter caption");
     if (!files.length) return alert("Select files");
@@ -38,26 +40,34 @@ export default function AdminGallery() {
     fetchImages();
   };
 
-  const handleUpdateCaption = async (oldCap) => {
-    if (!newCaption.trim()) return alert("Enter new caption");
+  // EDIT START
+  const handleEdit = (img) => {
+    setEditId(img._id);
+    setNewCaption(img.caption);
+  };
 
-    await axios.put(
-      `${API}/${encodeURIComponent(oldCap)}`,
-      { caption: newCaption }
-    );
+  // SAVE EDIT
+  const handleUpdate = async (id) => {
+    if (!newCaption.trim()) return alert("Enter caption");
 
-    setEditCaption(null);
+    await axios.put(`${API}/${id}`, {
+      caption: newCaption,
+    });
+
+    setEditId(null);
     setNewCaption("");
     fetchImages();
   };
 
-  const handleDelete = async (cap) => {
-    if (!window.confirm(`Delete "${cap}"?`)) return;
+  // DELETE
+  const handleDelete = async (id) => {
+    if (!window.confirm("Delete this image?")) return;
 
-    await axios.delete(`${API}/${encodeURIComponent(cap)}`);
+    await axios.delete(`${API}/${id}`);
     fetchImages();
   };
 
+  // GROUP BY CAPTION (UI ONLY)
   const grouped = images.reduce((acc, img) => {
     if (!acc[img.caption]) acc[img.caption] = [];
     acc[img.caption].push(img);
@@ -68,7 +78,7 @@ export default function AdminGallery() {
     <div className="container mt-3">
       <h4>Gallery Admin</h4>
 
-      {/* Upload Section */}
+      {/* Upload */}
       <input
         className="form-control my-2"
         placeholder="Enter caption"
@@ -101,8 +111,9 @@ export default function AdminGallery() {
         <tbody>
           {Object.keys(grouped).map((cap) => (
             <tr key={cap}>
+              {/* CAPTION */}
               <td>
-                {editCaption === cap ? (
+                {editId && grouped[cap].some((i) => i._id === editId) ? (
                   <input
                     className="form-control"
                     value={newCaption}
@@ -113,12 +124,14 @@ export default function AdminGallery() {
                 )}
               </td>
 
+              {/* COUNT */}
               <td>{grouped[cap].length}</td>
 
+              {/* PREVIEW */}
               <td>
-                {grouped[cap].slice(0, 3).map((img, i) => (
+                {grouped[cap].slice(0, 3).map((img) => (
                   <img
-                    key={i}
+                    key={img._id}
                     src={img.url}
                     width="50"
                     height="50"
@@ -128,12 +141,13 @@ export default function AdminGallery() {
                 ))}
               </td>
 
+              {/* ACTIONS */}
               <td>
-                {editCaption === cap ? (
+                {editId && grouped[cap].some((i) => i._id === editId) ? (
                   <>
                     <button
                       className="btn btn-success btn-sm me-2"
-                      onClick={() => handleUpdateCaption(cap)}
+                      onClick={() => handleUpdate(editId)}
                     >
                       Save
                     </button>
@@ -141,7 +155,7 @@ export default function AdminGallery() {
                     <button
                       className="btn btn-secondary btn-sm"
                       onClick={() => {
-                        setEditCaption(null);
+                        setEditId(null);
                         setNewCaption("");
                       }}
                     >
@@ -152,17 +166,14 @@ export default function AdminGallery() {
                   <>
                     <button
                       className="btn btn-warning btn-sm me-2"
-                      onClick={() => {
-                        setEditCaption(cap);
-                        setNewCaption(cap);
-                      }}
+                      onClick={() => handleEdit(grouped[cap][0])}
                     >
                       Edit
                     </button>
 
                     <button
                       className="btn btn-danger btn-sm"
-                      onClick={() => handleDelete(cap)}
+                      onClick={() => handleDelete(grouped[cap][0]._id)}
                     >
                       Delete
                     </button>
