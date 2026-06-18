@@ -1,22 +1,58 @@
 const express = require("express");
+
 const router = express.Router();
+
 
 const { upload } = require("../middleware/upload");
 
+
 const {
-  uploadGallery,
-  getGallery,
-  updateCaption,
-  deleteByCaption,
+
+uploadGallery,
+
+getGallery,
+
+updateCaption,
+
+deleteGalleryById
+
+
 } = require("../controllers/galleryController");
 
-router.post("/upload", upload.array("files"), uploadGallery);
 
-router.get("/", getGallery);
 
-// IMPORTANT: must match controller name exactly
-router.put("/:id", updateCaption);
 
-router.delete("/:id", deleteByCaption);
+// upload multiple images
+router.post(
+"/upload",
+upload.array("files"),
+uploadGallery
+);
+
+
+
+// get gallery
+router.get(
+"/",
+getGallery
+);
+
+
+
+// update caption
+router.put(
+"/:id",
+updateCaption
+);
+
+
+
+// delete image
+router.delete(
+"/:id",
+deleteGalleryById
+);
+
+
 
 module.exports = router;
