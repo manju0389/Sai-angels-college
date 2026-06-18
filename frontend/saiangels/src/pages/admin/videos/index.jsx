@@ -12,24 +12,24 @@ const AdminVideos = () => {
     date: "",
   });
 
-  // ✅ EDIT STATES
   const [editId, setEditId] = useState(null);
-  const [newTitle, setNewTitle] = useState("");
+  const [editTitle, setEditTitle] = useState("");
 
   useEffect(() => {
     fetchVideos();
   }, []);
 
+  // ================= FETCH =================
   const fetchVideos = async () => {
     try {
       const res = await axios.get(`${API}/videos`);
-      setVideos(res.data);
+      setVideos(res.data || []);
     } catch (err) {
       console.error("Error fetching videos:", err);
     }
   };
 
-  // ADD VIDEO
+  // ================= ADD =================
   const handleAdd = async () => {
     if (!form.title || !form.link || !form.date) {
       return alert("Please fill all required fields");
@@ -46,7 +46,7 @@ const AdminVideos = () => {
     }
   };
 
-  // DELETE
+  // ================= DELETE =================
   const handleDelete = async (id) => {
     if (!window.confirm("Delete this video?")) return;
 
@@ -58,17 +58,23 @@ const AdminVideos = () => {
     }
   };
 
-  // UPDATE TITLE
+  // ================= EDIT START =================
+  const handleEdit = (video) => {
+    setEditId(video._id);
+    setEditTitle(video.title);
+  };
+
+  // ================= UPDATE =================
   const handleUpdate = async (id) => {
-    if (!newTitle.trim()) return alert("Enter title");
+    if (!editTitle.trim()) return alert("Enter title");
 
     try {
       await axios.put(`${API}/videos/${id}`, {
-        title: newTitle,
+        title: editTitle,
       });
 
       setEditId(null);
-      setNewTitle("");
+      setEditTitle("");
       fetchVideos();
     } catch (err) {
       console.error(err);
@@ -133,8 +139,8 @@ const AdminVideos = () => {
                 {editId === video._id ? (
                   <input
                     className="form-control"
-                    value={newTitle}
-                    onChange={(e) => setNewTitle(e.target.value)}
+                    value={editTitle}
+                    onChange={(e) => setEditTitle(e.target.value)}
                     onKeyDown={(e) => {
                       if (e.key === "Enter") handleUpdate(video._id);
                     }}
@@ -171,7 +177,7 @@ const AdminVideos = () => {
                       className="btn btn-secondary btn-sm"
                       onClick={() => {
                         setEditId(null);
-                        setNewTitle("");
+                        setEditTitle("");
                       }}
                     >
                       Cancel
@@ -181,10 +187,7 @@ const AdminVideos = () => {
                   <>
                     <button
                       className="btn btn-warning btn-sm me-2"
-                      onClick={() => {
-                        setEditId(video._id);
-                        setNewTitle(video.title);
-                      }}
+                      onClick={() => handleEdit(video)}
                     >
                       Edit
                     </button>
