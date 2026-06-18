@@ -7,19 +7,16 @@ const {
   uploadGallery,
   getGallery,
   updateCaption,
-  deleteGalleryById
+  deleteByCaption,
 } = require("../controllers/galleryController");
 
-// Upload multiple files
 router.post("/upload", upload.array("files"), uploadGallery);
 
-// Get all images
 router.get("/", getGallery);
 
-// ✅ FIXED: use ID not caption
+// IMPORTANT: must match controller name exactly
 router.put("/:id", updateCaption);
 
-// ✅ FIXED: use ID not caption
-router.delete("/:id", deleteGalleryById);
+router.delete("/:id", deleteByCaption);
 
 module.exports = router;
