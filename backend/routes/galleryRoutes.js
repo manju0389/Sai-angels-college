@@ -2,11 +2,12 @@ const express = require("express");
 const router = express.Router();
 
 const { upload } = require("../middleware/upload");
+
 const {
   uploadGallery,
   getGallery,
-  deleteByCaption,
-  updateCaption
+  updateCaption,
+  deleteGalleryById
 } = require("../controllers/galleryController");
 
 // Upload multiple files
@@ -15,10 +16,10 @@ router.post("/upload", upload.array("files"), uploadGallery);
 // Get all images
 router.get("/", getGallery);
 
-// Update caption
-router.put("/:caption", updateCaption);
+// ✅ FIXED: use ID not caption
+router.put("/:id", updateCaption);
 
-// Delete by caption
-router.delete("/:caption", deleteByCaption);
+// ✅ FIXED: use ID not caption
+router.delete("/:id", deleteGalleryById);
 
 module.exports = router;
