@@ -1,6 +1,5 @@
 const cloudinary = require("../config/cloudinary");
 const { uploadToCloudinary } = require("../middleware/upload");
-
 const Gallery = require("../models/Gallery");
 
 // ================= UPLOAD =================
@@ -37,7 +36,6 @@ exports.uploadGallery = async (req, res) => {
       data: uploadedItems,
     });
   } catch (err) {
-    console.error(err);
     res.status(500).json({ error: err.message });
   }
 };
@@ -52,14 +50,14 @@ exports.getGallery = async (req, res) => {
   }
 };
 
-// ================= UPDATE CAPTION =================
+// ================= UPDATE (FIXED) =================
 exports.updateCaption = async (req, res) => {
   try {
     const { id } = req.params;
     const { caption } = req.body;
 
     if (!caption) {
-      return res.status(400).json({ error: "New caption required" });
+      return res.status(400).json({ error: "Caption required" });
     }
 
     const updated = await Gallery.findByIdAndUpdate(
@@ -72,32 +70,34 @@ exports.updateCaption = async (req, res) => {
       return res.status(404).json({ error: "Not found" });
     }
 
-    res.json({ message: "Caption updated", item: updated });
+    res.json({
+      message: "Caption updated",
+      item: updated,
+    });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
 
-// ================= DELETE =================
-exports.deleteByCaption = async (req, res) => {
+// ================= DELETE (FIXED) =================
+exports.deleteGalleryById = async (req, res) => {
   try {
-    const { caption } = req.params;
+    const { id } = req.params;
 
-    const items = await Gallery.find({ caption });
+    const item = await Gallery.findById(id);
 
-    if (!items.length) {
+    if (!item) {
       return res.status(404).json({ error: "Not found" });
     }
 
-    for (const item of items) {
-      if (item.public_id) {
-        await cloudinary.uploader.destroy(item.public_id, {
-          resource_type: item.type === "video" ? "video" : "image",
-        });
-      }
-
-      await Gallery.findByIdAndDelete(item._id);
+    if (item.public_id) {
+      await cloudinary.uploader.destroy(item.public_id, {
+        resource_type:
+          item.type === "video" ? "video" : "image",
+      });
     }
+
+    await Gallery.findByIdAndDelete(id);
 
     res.json({ message: "Deleted successfully" });
   } catch (err) {
