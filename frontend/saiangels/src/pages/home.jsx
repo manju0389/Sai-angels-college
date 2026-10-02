@@ -13,19 +13,19 @@ import Banner from "../components/Banner";
 // ✅ Declare data OUTSIDE return (infrastructure section)
 const programs = [
   {
-    title: "Laboratories",
+    title: "Science",
     image: "/images/science-img.jpg",
-    desc: "Now study in a leading science college with experienced staff & a positive learning environment. Contact now! ",
+    desc: "Build a strong foundation in Science with experienced faculty, practical learning, and a supportive classroom environment.",
+  },
+  {
+    title: "Laboratories",
+    image: "/images/commerce-img.jpg",
+    desc: "Discover the world of practical science with our well-equipped labs, experienced guidance, and hands-on learning opportunities.",
   },
   {
     title: "Class Room",
-    image: "/images/commerce-img.jpg",
-    desc: "Passionate about your higher studies and your subjects?We offer you the best of commerce courses to persue.",
-  },
-  {
-    title: "Office Room",
     image: "/images/competitive-img.jpg",
-    desc: "A Premier institute for NEET/JEE/K-CET/NATA in coffee land We have expert faculties in our institute for those who want to opt for different competitive exams.",
+    desc: "A Premier institute for NEET/JEE/K-CET/NATA. We have expert faculties in our institute for those who want to opt for different competitive exams.",
   },
 ];
 
