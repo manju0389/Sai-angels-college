@@ -58,7 +58,7 @@ export default function RankCarousel() {
           id="rankCarousel"
           className="carousel slide"
           data-bs-ride="carousel"
-          data-bs-interval="2500"
+          data-bs-interval="1500"
         >
           <div className="carousel-inner">
 
