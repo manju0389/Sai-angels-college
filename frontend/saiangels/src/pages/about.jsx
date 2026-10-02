@@ -61,7 +61,10 @@ export default function About() {
             <div className="vm-content">
               <h2>Our Vision</h2>
               <p>
-                We nurture young minds through quality education and innovation.
+                Our vision is to nurture confident, responsible, and future-ready students through 
+                quality education, innovative learning, and holistic development. We aspire to create an 
+                inspiring environment where every student can discover their potential, pursue their 
+                ambitions, and contribute positively to society.
               </p>
             </div>
           </div>
@@ -75,7 +78,10 @@ export default function About() {
             <div className="vm-content">
               <h2>Our Mission</h2>
               <p>
-                We shape students into skilled and confident professionals.
+                Our mission is guided by our commitment to empower young minds to achieve their goals by 
+                providing access to high quality education to the residents of Chikmagalur and all over 
+                Karnataka. As an educational institution with a diverse student population, we provide 
+                education and learning opportunities, with a focus on excellence in all that we do.
               </p>
             </div>
           </div>
