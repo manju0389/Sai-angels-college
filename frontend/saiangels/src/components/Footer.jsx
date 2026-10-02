@@ -23,10 +23,12 @@ export default function Footer() {
         <div className="col-lg-4">
         {/* Logo Section */}
         <div className="footer-col logo-col">
-          <h2 className="logo">Sri Sai Angels </h2>
-          <p> PU College </p>
+          <h2 className="logo">Sri Sai Angels <small className="fs-6"> PU College </small></h2>
+          <p> We strive to create a supportive learning environment where students discover their 
+            potential, develop essential skills, and grow into confident, responsible, and accomplished 
+            individuals. </p>
             <a href="/">
-              <img src="/images/saiangels.webp" alt="My Image" />
+              <img src="/images/main-logo.png" alt="My Image" />
             </a>
         </div>
         </div>

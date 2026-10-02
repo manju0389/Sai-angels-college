@@ -72,7 +72,7 @@ export default function RankCarousel() {
                   {group.map((student) => (
                     <div
                       key={student.id || student._id}
-                      className="col-md-3 col-12 mb-4"
+                      className="col-md-4 col-12 mb-4"
                     >
                       <div className="student-card">
 

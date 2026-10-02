@@ -25,7 +25,7 @@ export default function HomeGallery() {
   }, []);
 
   return (
-    <div className="bg-dark text-white">
+    <div className="text-white" style={{ background: "#ff9c09" }}>
       <div className="container py-4">
         {/* Title */}
         <div className="video-header">

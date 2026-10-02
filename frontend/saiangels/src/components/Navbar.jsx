@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import logo from "/images/main-logo.jpg";
+import logo from "/images/main-logo.png";
 
 export default function Navbar() {
   const [profileOpen, setProfileOpen] = useState(false);
@@ -22,6 +22,7 @@ export default function Navbar() {
             <span> <a href="https://www.facebook.com/Saiangelspuc/" target="_blank" rel="noopener noreferrer"> <i className="fa-brands fa-facebook"></i> </a></span>
             <span> <a href="https://www.youtube.com/@saiangelschikmagalur5459" target="_blank" rel="noopener noreferrer"> <i className="fa-brands fa-youtube"></i> </a></span>
             <span> <a href="https://www.instagram.com/saiangelspucollege/?hl=en" target="_blank" rel="noopener noreferrer"> <i className="fa-brands fa-instagram"></i> </a></span>
+            <span> <a href="https://api.whatsapp.com/send?phone=919535429881" target="_blank" rel="noopener noreferrer"> <i className="fa-brands fa-whatsapp"></i> </a></span>
         </div>
         </div>
       </div>

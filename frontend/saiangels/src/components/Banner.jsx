@@ -62,7 +62,7 @@ const Banner = () => {
               style={{ height: "450px", objectFit: "cover" }}
             />
 
-            <div className="carousel-caption bg-dark bg-opacity-50 rounded p-2">
+            <div className="carousel-caption bg-dark bg-opacity-50 rounded p-2 d-none">
               <h3>{banner.title}</h3>
               <p>{banner.description}</p>
             </div>
