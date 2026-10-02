@@ -54,7 +54,7 @@
 
 /* Active content */
 .accordion-content.active {
-  max-height: 2000px;
+  max-height: 4000px;
   padding: 15px;
 }
 
