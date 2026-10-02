@@ -12,10 +12,11 @@ export default function HomeGallery() {
       try {
         const res = await axios.get(API);
 
-        // Take last 4 items safely
-        const firstFour = (res.data || []).slice(-4).reverse();
+        // Backend already sorts newest first
+        // So take the first 4 items
+        const latestFour = (res.data || []).slice(0, 4);
 
-        setImages(firstFour);
+        setImages(latestFour);
       } catch (err) {
         console.error("Gallery fetch error:", err);
       }
@@ -27,6 +28,7 @@ export default function HomeGallery() {
   return (
     <div className="text-white" style={{ background: "#ff9c09" }}>
       <div className="container py-4">
+
         {/* Title */}
         <div className="video-header">
           <h1>Our Gallery</h1>
@@ -35,8 +37,8 @@ export default function HomeGallery() {
 
         {/* Gallery Grid */}
         <div className="row">
-          {images.map((img, index) => (
-            <div key={img.id || index} className="col-md-3 mb-4">
+          {images.map((img) => (
+            <div key={img._id} className="col-md-3 mb-4">
               <div className="gallery-item">
 
                 {/* IMAGE / VIDEO CHECK */}
@@ -61,6 +63,7 @@ export default function HomeGallery() {
                 <p className="thumb-caption">
                   {img.caption || ""}
                 </p>
+
               </div>
             </div>
           ))}
@@ -73,6 +76,7 @@ export default function HomeGallery() {
         >
           Click for more images
         </button>
+
       </div>
     </div>
   );
