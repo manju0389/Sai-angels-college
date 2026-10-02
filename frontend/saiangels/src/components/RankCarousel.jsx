@@ -26,8 +26,8 @@ export default function RankCarousel() {
     fetchStudents();
   }, []);
 
-  // GROUP INTO SLIDES (4 per slide)
-  const chunkSize = 4;
+  // GROUP INTO SLIDES (3 per slide)
+  const chunkSize = 3;
   const slides = [];
 
   for (let i = 0; i < students.length; i += chunkSize) {
