@@ -70,8 +70,8 @@
 
 /* Apply button */
 .apply-btn {
-  background-color: #f4c542;
-  border: none;
+  background-color: rgb(235, 186, 53);
+  border: 1px solid #b77878;
   padding: 10px 20px;
   border-radius: 6px;
   font-weight: 600;
@@ -93,7 +93,7 @@
 }
 
 .apply-btn:hover {
-  background-color: #e0b233;
+  background-color: #116E63;
 }
 
 /* Right Column */
