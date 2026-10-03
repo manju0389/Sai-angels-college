@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 const API = "https://sai-angels-college.onrender.com/api";
 
@@ -52,7 +53,9 @@ export default function RankCarousel() {
           Our College Rank Holders ({previousYear} - {currentYear})
         </h2>
 
-        <p className="subtitle">Congratulations</p>
+        <p className="subtitle"> Discover the achievements of our students across PU Board, CET, NEET, 
+          and JEE. With dedicated academic support and focused entrance-exam preparation, 
+          Sri Sai Angels PU College helps students build a strong foundation for higher education. </p>
 
         <div
           id="rankCarousel"
@@ -107,6 +110,11 @@ export default function RankCarousel() {
           {/* CONTROLS */}
           {slides.length > 1 && (
             <>
+
+              <Link to="/achievements">
+                <button className="apply-btn float-start"> Click for all Achievements </button>
+              </Link>            
+            
               <button
                 className="carousel-control-prev-rank"
                 type="button"
