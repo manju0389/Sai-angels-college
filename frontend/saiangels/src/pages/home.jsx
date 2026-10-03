@@ -30,16 +30,6 @@ const programs = [
 ];
 
 
-// ✅ Declare data OUTSIDE return (gallery section)
-  const images = [
-  { src: "/images/gallery/nature.jpg", caption: "Beautiful Landscape" },
-  { src: "/images/gallery/nature.jpg", caption: "Mountain View" },
-  { src: "/images/gallery/nature.jpg", caption: "City Lights" },
-  { src: "/images/gallery/nature.jpg", caption: "Ocean Breeze" },
-];
-
-
-
 export default function Home() {
 
   return (
@@ -77,9 +67,8 @@ export default function Home() {
         {/* Bottom Section ends*/}
 
 
-
       {/* Gallery starts */}
-          <GallerySection images={images} />
+          <GallerySection />
       {/* Gallery ends */}
       
 
