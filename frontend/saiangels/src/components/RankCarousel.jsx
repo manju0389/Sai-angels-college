@@ -49,7 +49,7 @@ export default function RankCarousel() {
     <section className="rank-section container-fluid mb-5">
       <div className="container text-center">
 
-        <h2 className="title">
+        <h2 className="title" style={{ paddingBottom: "2%" }}>
           Our College Rank Holders ({previousYear} - {currentYear})
         </h2>
 

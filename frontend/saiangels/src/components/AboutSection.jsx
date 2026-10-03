@@ -9,8 +9,8 @@ export default function AboutSection() {
               <img src="/images/about-img.webp" alt="Students discussion"/>
             </div>
 
-            <div className="about-content">
-              <h2>Welcome to Sai Angles PU College</h2>
+            <div className="about-content why-intro">
+              <h2>Welcome to Sai Angles <br /> <span> PU College </span></h2>
 
               <p>
                 Sai Angels is committed to serving society in an environment 
