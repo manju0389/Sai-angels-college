@@ -59,7 +59,7 @@ const Banner = () => {
               src={banner.image}
               alt={banner.title || "banner"}
               className="d-block w-100"
-              style={{ height: "450px", objectFit: "cover" }}
+              style={{ height: "650px"}}
             />
 
             <div className="carousel-caption bg-dark bg-opacity-50 rounded p-2 d-none">
@@ -70,27 +70,6 @@ const Banner = () => {
         ))}
       </div>
 
-      {banners.length > 1 && (
-        <>
-          <button
-            className="carousel-control-prev"
-            type="button"
-            data-bs-target="#bannerCarousel"
-            data-bs-slide="prev"
-          >
-            <span className="carousel-control-prev-icon" />
-          </button>
-
-          <button
-            className="carousel-control-next"
-            type="button"
-            data-bs-target="#bannerCarousel"
-            data-bs-slide="next"
-          >
-            <span className="carousel-control-next-icon" />
-          </button>
-        </>
-      )}
     </div>
   );
 };

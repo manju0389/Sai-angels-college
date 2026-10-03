@@ -1,4 +1,9 @@
-
+import {
+  FaGraduationCap,
+  FaUsers,
+  FaBullseye,
+  FaUserCheck,
+} from "react-icons/fa";
 
 const achievements = [
   {
@@ -70,26 +75,40 @@ export default function Coaching() {
         </div>
 
         <div className="achievement-stats">
-          <div>
-            <strong>100%</strong>
-            <span>Academic Focus</span>
-          </div>
 
-          <div>
-            <strong>360°</strong>
-            <span>Student Mentoring</span>
-          </div>
+  <div className="stat-item">
+    <div className="stat-icon">
+      <FaGraduationCap />
+    </div>
+    <strong>100%</strong>
+    <span>Academic Focus</span>
+  </div>
 
-          <div>
-            <strong>10+</strong>
-            <span>Career Pathways</span>
-          </div>
+  <div className="stat-item">
+    <div className="stat-icon">
+      <FaUsers />
+    </div>
+    <strong>360°</strong>
+    <span>Student Mentoring</span>
+  </div>
 
-          <div>
-            <strong>1:1</strong>
-            <span>Personal Guidance</span>
-          </div>
-        </div>
+  <div className="stat-item">
+    <div className="stat-icon">
+      <FaBullseye />
+    </div>
+    <strong>10+</strong>
+    <span>Career Pathways</span>
+  </div>
+
+  <div className="stat-item">
+    <div className="stat-icon">
+      <FaUserCheck />
+    </div>
+    <strong>1:1</strong>
+    <span>Personal Guidance</span>
+  </div>
+
+</div>
       </section>
 
 
