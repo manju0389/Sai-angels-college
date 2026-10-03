@@ -4,6 +4,8 @@ import "../assets/css/home.css";
 import AboutSection from "../components/AboutSection";
 import CTASection from "../components/CTASection";
 import WhySection from "../components/WhySection";
+import Coaching from "../components/Coaching";
+import Courses from "../components/Courses";
 import Programs from "../components/Programs";
 import GallerySection from "../components/GallerySection";
 import RankCarousel from "../components/RankCarousel";
@@ -52,6 +54,13 @@ export default function Home() {
           <WhySection />
         {/* WHY SECTION ends*/}
 
+        {/* Coaching starts*/}
+          <Coaching />
+        {/* Coaching ends*/}
+
+        {/* Courses starts*/}
+          <Courses />
+        {/* Courses ends*/}
 
         {/* infrastructure Starts */}
           <Programs programs={programs} />
