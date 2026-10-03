@@ -5,7 +5,7 @@
 
 /* LEFT PANEL */
 .left-panel {
-  background: #28666e;
+  background: #252e59;
   color: white;
   padding: 40px 30px;
   display: flex;
@@ -27,7 +27,7 @@
 
 /* RIGHT PANEL */
 .right-panel {
-  background: #fff;
+  background: #eae7dc;
   padding: 30px;
 }
 
