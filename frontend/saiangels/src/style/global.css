@@ -190,16 +190,9 @@ body {
   }
 }
 
-.banner-image {
-  height: 650px;
-}
 
 /* Mobile */
 @media (max-width: 767px) {
-  .banner-image {
-    height: 350px;
-  }
-
   .logo {
     width:80%
   }
