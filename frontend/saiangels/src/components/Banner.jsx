@@ -6,6 +6,7 @@ const API = "https://sai-angels-college.onrender.com/api";
 const Banner = () => {
   const [banners, setBanners] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [current, setCurrent] = useState(0);
 
   useEffect(() => {
     const fetchBanners = async () => {
@@ -22,52 +23,105 @@ const Banner = () => {
     fetchBanners();
   }, []);
 
+  /* ==========================================
+     AUTO SLIDER
+  ========================================== */
+
+  useEffect(() => {
+    if (banners.length <= 1) return;
+
+    const interval = setInterval(() => {
+      setCurrent((prev) =>
+        prev === banners.length - 1 ? 0 : prev + 1
+      );
+    }, 4000);
+
+    return () => clearInterval(interval);
+  }, [banners.length]);
+
+
   if (loading) {
-    return <p className="text-center">Loading banners...</p>;
+    return (
+      <div className="banner-loading">
+        Loading banners...
+      </div>
+    );
   }
 
   if (!banners.length) {
-    return <p className="text-center">No banners found</p>;
+    return (
+      <div className="banner-loading">
+        No banners found
+      </div>
+    );
   }
 
-  return (
-    <div
-      id="bannerCarousel"
-      className="carousel slide"
-      data-bs-ride="carousel"
-      data-bs-interval="3000"
-    >
-      <div className="carousel-indicators">
-        {banners.map((_, i) => (
-          <button
-            key={i}
-            type="button"
-            data-bs-target="#bannerCarousel"
-            data-bs-slide-to={i}
-            className={i === 0 ? "active" : ""}
-          />
-        ))}
-      </div>
 
-      <div className="carousel-inner">
-        {banners.map((banner, i) => (
+  return (
+    <div className="banner-carousel">
+
+      {/* ======================================
+          BANNERS
+      ====================================== */}
+
+      <div className="banner-wrapper">
+
+        {banners.map((banner, index) => (
+
           <div
-            key={banner.id || i}
-            className={`carousel-item ${i === 0 ? "active" : ""}`}
+            key={banner.id || index}
+            className={`banner-slide ${
+              index === current ? "active" : ""
+            }`}
           >
+
             <img
               src={banner.image}
-              alt={banner.title || "banner"}
-              className="d-block w-100 banner-image"
+              alt={banner.title || "Banner"}
+              className="banner-image"
             />
 
-            <div className="carousel-caption bg-dark bg-opacity-50 rounded p-2 d-none">
-              <h3>{banner.title}</h3>
-              <p>{banner.description}</p>
-            </div>
+            {/* Caption */}
+            {banner.title && (
+              <div className="banner-caption">
+                <h3>{banner.title}</h3>
+
+                {banner.description && (
+                  <p>{banner.description}</p>
+                )}
+              </div>
+            )}
+
           </div>
+
         ))}
+
       </div>
+
+
+      {/* ======================================
+          DOTS
+      ====================================== */}
+
+      {banners.length > 1 && (
+        <div className="banner-indicators">
+
+          {banners.map((_, index) => (
+
+            <button
+              key={index}
+              type="button"
+              className={
+                index === current ? "active" : ""
+              }
+              onClick={() => setCurrent(index)}
+              aria-label={`Go to banner ${index + 1}`}
+            />
+
+          ))}
+
+        </div>
+      )}
 
     </div>
   );
