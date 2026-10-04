@@ -1,3 +1,4 @@
+import "../assets/css/coaching.css";
 import {
   FaGraduationCap,
   FaUsers,

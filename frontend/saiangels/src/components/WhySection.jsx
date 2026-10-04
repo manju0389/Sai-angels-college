@@ -1,3 +1,5 @@
+
+import "../assets/css/why-choose.css";
 import {
   FaTrophy,
   FaBook,

@@ -32,7 +32,6 @@ export default function HomeGallery() {
         {/* Title */}
         <div className="video-header">
           <h1>Our Gallery</h1>
-          <div className="underline"></div>
         </div>
 
         {/* Gallery Grid */}
