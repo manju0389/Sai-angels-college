@@ -1,0 +1,257 @@
+/* ==========================================
+   PAGE
+========================================== */
+
+.results-page {
+  width: 100%;
+  background: #fff;
+}
+
+
+/* ==========================================
+   RESULT SECTION
+========================================== */
+
+.result-section {
+  padding: 25px 20px;
+  background: #fff;
+}
+
+.result-section:nth-child(odd) {
+  background: #eae7dc;
+}
+
+
+/* ==========================================
+   HEADING
+========================================== */
+
+.section-heading-result {
+  max-width: 750px;
+  margin: 0 auto 25px;
+  text-align: center;
+}
+
+.section-heading-result h2 {
+  margin: 5px 0;
+  color: #162b59;
+  font-size: 38px;
+  font-weight: 800;
+}
+
+.section-heading-result p {
+  margin: 0;
+  max-width: 100%;
+}
+
+
+/* ==========================================
+   CAROUSEL
+========================================== */
+
+.carousel-container {
+  max-width: 1200px;
+  margin: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.carousel-window {
+  width: 100%;
+  overflow: hidden;
+}
+
+.carousel-track {
+  display: flex;
+  transition: transform 0.5s ease-in-out;
+}
+
+.carousel-slide {
+  min-width: 33.333333%;
+  padding: 6px;
+  box-sizing: border-box;
+}
+
+
+/* ==========================================
+   CARD
+========================================== */
+
+.result-card {
+  background: #fff;
+  border: 4px solid #ff9c09;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.07);
+  transition: 0.3s;
+}
+
+.result-card:hover {
+  transform: translateY(-7px);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.12);
+}
+
+
+/* ==========================================
+   IMAGE
+========================================== */
+
+.result-image {
+  position: relative;
+  padding: 8px;
+}
+
+.result-image img {
+  width: 100%;
+  display: block;
+  object-fit: contain;
+  border-radius: 12px;
+}
+
+
+/* ==========================================
+   BADGE
+========================================== */
+
+.rank-badge {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  padding: 7px 14px;
+  background: #087f3f;
+  color: #fff;
+  border-radius: 30px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+
+/* ==========================================
+   INFO
+========================================== */
+
+.result-info {
+  padding: 15px;
+  text-align: center;
+  background: #ededed;
+}
+
+.result-info h3 {
+  margin: 0 0 5px;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.result-info p {
+  margin: 5px 0;
+  text-align: center;
+  color: #777;
+}
+
+.result-info strong {
+  display: inline-block;
+  margin-top: 5px;
+  padding: 5px 15px;
+  background: #ffc107;
+  color: #000;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+
+/* ==========================================
+   ARROWS
+========================================== */
+
+.carousel-arrow {
+  flex-shrink: 0;
+  width: 42px;
+  height: 42px;
+  border: 1px solid #ddd;
+  border-radius: 50%;
+  background: #fff;
+  color: #162b59;
+  font-size: 16px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+  transition: 0.3s;
+}
+
+.carousel-arrow:hover {
+  background: #087f3f;
+  color: #fff;
+  border-color: #087f3f;
+}
+
+
+/* ==========================================
+   DOTS
+========================================== */
+
+.carousel-dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 15px;
+}
+
+.carousel-dots button {
+  width: 9px;
+  height: 9px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: #ccc;
+  cursor: pointer;
+}
+
+.carousel-dots button.active {
+  width: 28px;
+  border-radius: 20px;
+  background: #087f3f;
+}
+
+
+/* ==========================================
+   TABLET
+========================================== */
+
+@media (max-width: 900px) {
+  .carousel-slide {
+    min-width: 50%;
+  }
+}
+
+
+/* ==========================================
+   MOBILE
+========================================== */
+
+@media (max-width: 600px) {
+  .result-section {
+    padding: 30px 10px;
+  }
+
+  .section-heading-result {
+    margin-bottom: 20px;
+  }
+
+  .section-heading-result h2 {
+    font-size: 28px;
+  }
+
+  .carousel-slide {
+    min-width: 100%;
+    padding: 5px;
+  }
+
+  .carousel-arrow {
+    width: 38px;
+    height: 38px;
+  }
+
+  .result-image img {
+    height: 250px;
+  }
+}
