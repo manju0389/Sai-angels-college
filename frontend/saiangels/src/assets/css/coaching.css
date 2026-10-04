@@ -1,0 +1,741 @@
+/* =========================
+   COACHING
+========================= */
+.coaching-section {
+  padding: 50px 7%;
+  background: #15235c;
+  color: #fff;
+  display: grid;
+  grid-template-columns: 0.8fr 1.2fr;
+  gap: 90px;
+}
+
+.coaching-intro h2 {
+  font-size: clamp(42px, 5vw, 70px);
+  line-height: 1;
+  font-weight: 400;
+  margin: 20px 0;
+}
+
+.coaching-intro h2 strong {
+  color: #e0b45f;
+}
+
+.coaching-intro p {
+  line-height: 1.8;
+}
+
+.programme-area {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.programme-item {
+  padding: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  transition: 0.3s;
+}
+
+.programme-item:hover {
+  background: #e0b45f;
+  color: #15235c;
+}
+
+.programme-item span {
+  font-size: 12px;
+  opacity: 0.6;
+}
+
+.programme-item h3 {
+  font-size: 16px;
+  flex: 1;
+}
+
+.programme-item b {
+  font-size: 20px;
+}
+
+
+/* =========================
+   COURSES
+========================= */
+.courses-section {
+  padding: 40px 0;
+  background: #ededed;
+}
+
+.courses-header {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  margin-bottom: 40px;
+}
+
+.courses-title span {
+  color: #1769aa;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 2.5px;
+}
+
+.courses-title h2 {
+  margin: 7px 0 0;
+  font-size: 40px;
+  line-height: 1.15;
+  color: #172033;
+  font-weight: 700;
+}
+
+.courses-title strong {
+  color: #1769aa;
+}
+
+.courses-header > p {
+  max-width: 370px;
+  margin: 0;
+  color: #718096;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.courses-list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+}
+
+.course-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 125px;
+  padding: 18px 20px;
+  background: #fff;
+  border: 1px solid #e9edf3;
+  border-radius: 18px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.course-item::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 4px;
+  height: 100%;
+  background: var(--course-color);
+}
+
+.course-item:hover {
+  transform: translateY(-5px);
+  border-color: transparent;
+  box-shadow: 0 15px 35px rgba(30, 50, 80, 0.12);
+}
+
+.course-number {
+  width: 35px;
+  color: #cbd5e1;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.course-icon {
+  width: 55px;
+  height: 55px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 17px;
+  border-radius: 15px;
+  color: var(--course-color);
+  background: #f5f7fa;
+  font-size: 22px;
+  transition: all 0.3s ease;
+}
+
+.course-item:hover .course-icon {
+  color: #fff;
+  background: var(--course-color);
+  transform: rotate(-5deg);
+}
+
+.course-info {
+  flex: 1;
+}
+
+.course-code {
+  display: block;
+  margin-bottom: 3px;
+  color: var(--course-color);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+}
+
+.course-info h3 {
+  margin: 0 0 5px;
+  color: #172033;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.course-info p {
+  margin: 0;
+  max-width: 340px;
+  color: #718096;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+/* =========================
+   ACHIEVEMENTS
+========================= */
+.achievement-section {
+  padding: 15px 7%;
+  background: #f7f7f4;
+}
+
+.section-heading > span,
+.coaching-intro > span{
+  color: #b18a45;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 3px;
+}
+
+.section-heading h2 {
+  margin: 15px 0;
+    font-size: 40px;
+    line-height: 1.15;
+    color: #172033;
+    font-weight: 700;
+
+}
+
+.section-heading h2 em {
+  color: #b18a45;
+}
+
+.section-heading p {
+  max-width: 620px;
+  color: #667085;
+  line-height: 1.8;
+  font-size: 16px;
+}
+
+.achievement-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 22px;
+}
+
+.achievement-card {
+  min-height: 300px;
+  padding: 38px;
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+  transition: 0.4s ease;
+}
+
+.card-1 {
+  background: #15235c;
+  color: #fff;
+  grid-row: span 2;
+  min-height: 622px;
+}
+
+.card-2,
+.card-3 {
+  background: #fff;
+  border: 1px solid #e6e7e9;
+}
+
+.achievement-card:hover {
+  transform: translateY(-7px);
+}
+
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card-top span {
+  font-size: 46px;
+  opacity: 0.5;
+}
+
+.card-top small {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  padding: 8px 12px;
+  border: 1px solid currentColor;
+  border-radius: 50px;
+}
+
+.achievement-card h3 {
+  margin-top: 26px;
+  font-size: 34px;
+}
+
+.achievement-card p {
+  line-height: 1.8;
+  text-align: justify;
+  max-width: 570px;
+  padding-top: 4%;
+}
+
+.achievement-card a {
+  position: absolute;
+  bottom: 35px;
+  color: inherit;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.achievement-stats {
+  margin-top: 35px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+}
+
+.achievement-stats div:last-child {
+  border-right: 0;
+}
+
+.achievement-stats strong {
+  display: block;
+  font-size: 38px;
+  color: #15235c;
+}
+
+.achievement-stats span {
+  color: #777;
+  font-size: 13px;
+}
+
+.achievement-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  margin-top: 60px;
+  border-top: 1px solid #c7b6b6;
+  border-bottom: 1px solid #c7b6b6;
+}
+
+.stat-item {
+  position: relative;
+  padding: 35px 25px;
+  text-align: center;
+  transition: all 0.3s ease;
+  background: #ededed;
+}
+
+.stat-item:not(:last-child) {
+  border-right: 1px solid #c7b6b6;
+}
+
+.stat-icon {
+  width: 55px;
+  height: 55px;
+  margin: 0 auto 18px;
+  align-items: center;
+  border-radius: 50%;
+  background: #d3d0c7;
+  color: #9b7b32;
+  font-size: 24px;
+  transition: all 0.3s ease;
+}
+
+.stat-item strong {
+  display: block;
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1.1;
+  margin-bottom: 8px;
+}
+
+.stat-item span {
+  display: block;
+  font-size: 14px;
+  color: #666;
+  letter-spacing: 0.5px;
+}
+
+.stat-item:hover .stat-icon {
+  background: #9b7b32;
+  color: #fff;
+  transform: translateY(-4px);
+}
+
+.stat-item:hover {
+  transform: translateY(-3px);
+}
+
+@media (max-width: 768px) {
+
+  .achievement-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .stat-item:nth-child(2) {
+    border-right: none;
+  }
+
+  .stat-item:nth-child(1),
+  .stat-item:nth-child(2) {
+    border-bottom: 1px solid #c7b6b6;
+  }
+
+  .stat-item {
+    padding: 30px 15px;
+  }
+
+  .stat-item strong {
+    font-size: 27px;
+  }
+
+  .stat-icon {
+    width: 48px;
+    height: 48px;
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+
+  .achievement-stats {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .stat-item span {
+    font-size: 12px;
+  }
+}
+
+img, svg {
+    vertical-align: bottom;
+}
+
+/* =========================
+   MANAGEMENT
+========================= */
+
+.management-section {
+  padding: 50px 7%;
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr;
+  gap: 100px;
+  align-items: center;
+}
+
+.management-image {
+  position: relative;
+}
+
+.image-frame {
+  height: 620px;
+  overflow: hidden;
+  position: relative;
+}
+
+.image-frame img {
+  width: 100%;
+  height: 100%;
+  filter: grayscale(100%);
+}
+
+.management-content {
+  max-width: 650px;
+}
+
+.quote {
+  font-family: Georgia, serif;
+  color: #b18a45;
+  font-size: 100px;
+  height: 80px;
+}
+
+.management-content h2 {
+  font-size: clamp(42px, 5vw, 68px);
+  line-height: 1;
+  font-weight: 500;
+}
+
+.management-content h2 em {
+  color: #b18a45;
+}
+
+.lead {
+  color: #667085;
+  line-height: 1.9;
+  font-size: 17px;
+}
+
+.leader-info {
+  margin-top: 45px;
+  display: grid;
+  grid-template-columns: 180px 1px 1fr;
+  gap: 25px;
+  align-items: center;
+}
+
+.leader-info strong {
+  display: block;
+  font-size: 18px;
+}
+
+.leader-info span {
+  display: block;
+  margin-top: 8px;
+  font-size: 12px;
+  color: #888;
+}
+
+.leader-line {
+  height: 70px;
+  background: #ddd;
+}
+
+.leader-info p {
+  color: #777;
+  line-height: 1.7;
+  font-size: 14px;
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 991px) {
+  .why-intro {
+    padding-right: 0;
+  }
+
+  .why-intro h2 {
+    font-size: 35px;
+  }
+
+  .facilities-header {
+    margin-top: 30px;
+  }
+
+  .courses-header {
+    display: block;
+  }
+
+  .courses-header > p {
+    margin-top: 12px;
+  }
+
+  .courses-list {
+    grid-template-columns: 1fr;
+  }
+
+  .achievement-grid,
+  .coaching-section,
+  .management-section {
+    grid-template-columns: 1fr;
+  }
+
+  .card-1 {
+    grid-row: auto;
+    min-height: 400px;
+  }
+
+  .achievement-stats {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .programme-area {
+    grid-template-columns: 1fr;
+  }
+
+  .management-section {
+    gap: 60px;
+  }
+
+  .image-frame {
+    height: 500px;
+  }
+
+  .counter-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 35px;
+  }
+}
+
+@media (max-width: 768px) {
+  .menu-toggle {
+    display: block;
+    color: #000;
+  }
+
+  .nav-links {
+    position: absolute;
+    top: 120px;
+    left: 0;
+    width: 100%;
+    background: #000;
+    flex-direction: column;
+    display: none;
+    padding: 20px;
+  }
+
+  .nav-links.active {
+    display: flex;
+  }
+
+  .top-right {
+    display: block;
+    align-items: center;
+    gap: 15px;
+  }
+
+  .top-bar {
+    flex-direction: column;
+    text-align: center;
+    gap: 5px;
+  }
+
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: -250px;
+    z-index: 1050;
+    height: 100%;
+  }
+
+  .sidebar.show {
+    left: 0;
+  }
+}
+
+@media (max-width: 600px) {
+  .stats-section {
+    padding: 50px 15px;
+  }
+
+  .stats-section h2 {
+    font-size: 27px;
+  }
+
+  .stats-subtitle {
+    font-size: 18px;
+    margin-bottom: 35px;
+  }
+
+  .counter-grid {
+    grid-template-columns: 1fr;
+    max-width: 320px;
+    gap: 28px;
+  }
+
+  .counter-card {
+    height: 155px;
+  }
+
+  .counter-dot {
+    right: -10px;
+  }
+
+  .achievement-section,
+  .coaching-section,
+  .management-section {
+    padding: 70px 5%;
+  }
+
+  .achievement-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .achievement-stats div {
+    border-right: 0;
+    border-bottom: 1px solid #ddd;
+  }
+
+  .leader-info {
+    grid-template-columns: 1fr;
+  }
+
+  .leader-line {
+    display: none;
+  }
+
+  .footer-bottom {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .courses-section {
+    padding: 55px 15px;
+  }
+
+  .courses-title h2 {
+    font-size: 30px;
+  }
+
+  .course-item {
+    padding: 16px;
+    min-height: 110px;
+  }
+
+  .course-number {
+    display: none;
+  }
+
+  .course-info h3 {
+    font-size: 16px;
+  }
+
+  .course-info p {
+    font-size: 11px;
+  }
+
+  .why-section {
+    padding: 50px 15px;
+  }
+
+  .why-intro h2 {
+    font-size: 30px;
+  }
+
+  .facilities-header {
+    display: block;
+  }
+
+  .facilities-header p {
+    margin-top: 8px;
+  }
+
+  .features-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .feature-card {
+    min-height: 90px;
+  }
+
+  .feature-icon {
+    width: 45px;
+    height: 45px;
+    font-size: 19px;
+  }
+}
+
+@media (max-width: 576px) {
+  .features-grid {
+    grid-template-columns: 1fr;
+  }
+}
