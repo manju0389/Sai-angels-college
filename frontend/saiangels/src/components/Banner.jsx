@@ -58,8 +58,7 @@ const Banner = () => {
             <img
               src={banner.image}
               alt={banner.title || "banner"}
-              className="d-block w-100"
-              style={{ height: "650px"}}
+              className="d-block w-100 banner-image"
             />
 
             <div className="carousel-caption bg-dark bg-opacity-50 rounded p-2 d-none">

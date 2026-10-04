@@ -46,7 +46,7 @@ export default function RankCarousel() {
   }
 
   return (
-    <section className="rank-section container-fluid mb-5">
+    <section className="rank-section container-fluid">
       <div className="container text-center">
 
         <h2 className="title" style={{ paddingBottom: "2%" }}>
