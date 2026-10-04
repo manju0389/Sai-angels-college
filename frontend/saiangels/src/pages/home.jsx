@@ -62,23 +62,22 @@ export default function Home() {
           <Courses />
         {/* Courses ends*/}
 
+        {/* Result section Starts */}
+              <RankCarousel />
+            {/* Result section ends */}
+
         {/* infrastructure Starts */}
           <Programs programs={programs} />
         {/* infrastructure ends */}
 
 
-            {/* Result section Starts */}
-              <RankCarousel />
-            {/* Result section ends */}
-
-        {/* Bottom Section starts*/}
-            <CTASection />
-        {/* Bottom Section ends*/}
-
-
       {/* Gallery starts */}
           <GallerySection />
       {/* Gallery ends */}
+
+      {/* Bottom Section starts*/}
+            <CTASection />
+        {/* Bottom Section ends*/}
       
 
       </div>
