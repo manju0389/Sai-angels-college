@@ -1,6 +1,6 @@
 // src/components/Sidebar.jsx
 import { Link } from "react-router-dom";
-import logo from "/images/main-logo.jpg";
+import logo from "/images/saiangels.webp";
 
 const handleLogout = () => {
   localStorage.removeItem("token");
@@ -33,6 +33,12 @@ const Sidebar = ({ show, setShow }) => {
         <li className="nav-item">
           <Link to="/admin/gallery" className="nav-link text-white">
             Gallery Page
+          </Link>
+        </li>
+
+        <li className="nav-item">
+          <Link to="/admin/result" className="nav-link text-white">
+            Result Page
           </Link>
         </li>
 
