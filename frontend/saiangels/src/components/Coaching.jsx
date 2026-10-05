@@ -178,7 +178,7 @@ export default function Coaching() {
 
           <div className="leader-info">
             <div>
-              <strong>Principal Message</strong>
+              <strong>Joint Secretary</strong>
               <span>Management & Administration</span>
             </div>
 
