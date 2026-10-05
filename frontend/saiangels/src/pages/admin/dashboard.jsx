@@ -46,6 +46,14 @@ export default function Dashboard() {
           </Link>
         </div>
 
+        <div className="col-md-6">
+          <Link to="/admin/result" className="text-decoration-none">
+            <div className="card text-white bg-primary text-center p-4 shadow">
+              <h5>Result</h5>
+            </div>
+          </Link>
+        </div>
+
 
       </div>
     </div>
