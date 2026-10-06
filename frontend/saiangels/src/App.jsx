@@ -21,7 +21,7 @@ import AdminHome from "./pages/admin/home";
 import AdminAchievements from "./pages/admin/achievements";
 import AdminGallery from "./pages/admin/gallery";
 import AdminVideos from "./pages/admin/videos";
-import AdminResults from "./pages/admin/result";
+import AdminResult from "./pages/admin/result";
 import AdminAbout from "./pages/admin/about";
 
 import Login from "./pages/login";
@@ -68,7 +68,7 @@ function App() {
         <Route path="achievements" element={<AdminAchievements />} />
         <Route path="gallery" element={<AdminGallery />} />
         <Route path="videos" element={<AdminVideos />} />
-        <Route path="result" element={<AdminResults />} />
+        <Route path="result" element={<AdminResult />} />
        <Route path="about" element={<AdminAbout />} />
       </Route>
 
