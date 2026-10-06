@@ -272,10 +272,8 @@
 
 
 .admin-results {
-  min-height: 100vh;
-  background: #f5f7fb;
+  background: #e6e9f1;
   display: flex;
-  color: #1f2937;
 }
 
 
@@ -284,9 +282,7 @@
 ========================================== */
 
 .admin-main {
-  flex: 1;
   padding: 30px;
-  min-width: 0;
 }
 
 .admin-header {
@@ -315,7 +311,7 @@
 .add-student-btn,
 .save-btn {
   border: 0;
-  background: #2563eb;
+  background: #0d6efd;
   color: white;
   padding: 12px 18px;
   border-radius: 8px;
@@ -326,7 +322,7 @@
 .add-section-btn:hover,
 .add-student-btn:hover,
 .save-btn:hover {
-  background: #1d4ed8;
+  background: #0b5ed7;
 }
 
 .add-section-btn i,
@@ -372,22 +368,9 @@
   margin-top: 25px;
 }
 
-.section-admin-card {
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
-  padding: 20px;
-  transition: 0.2s;
-}
-
-.section-admin-card:hover,
-.section-admin-card.selected {
-  border-color: #2563eb;
-  box-shadow: 0 5px 20px rgba(37, 99, 235, 0.1);
-}
-
 .section-card-top {
   display: flex;
-  justify-content: space-between;
+  justify-content: end;
   align-items: center;
 }
 
@@ -409,7 +392,7 @@
 
 .section-actions button {
   border: 0;
-  background: #f3f4f6;
+  background: #c1c5c9;
   color: #6b7280;
   width: 34px;
   height: 34px;
@@ -419,12 +402,12 @@
 
 .section-actions button:hover {
   color: #2563eb;
-  background: #eff6ff;
+  background: #d3cccc;
 }
 
 .section-actions button:last-child:hover {
   color: #dc2626;
-  background: #fef2f2;
+  background: #d3cccc;
 }
 
 .section-admin-card h3 {
@@ -558,9 +541,10 @@
   background: #eff6ff;
 }
 
-.delete-btn {
+.deletes-btn {
   color: #dc2626;
   background: #fef2f2;
+  position: initial;
 }
 
 /* ==========================================
@@ -579,15 +563,6 @@
 
 .empty-state p {
   color: #6b7280;
-}
-
-.empty-state button {
-  background: #2563eb;
-  color: white;
-  border: 0;
-  padding: 9px 15px;
-  border-radius: 7px;
-  cursor: pointer;
 }
 
 /* ==========================================
@@ -774,38 +749,9 @@
   .section-grid {
     grid-template-columns: repeat(2, 1fr);
   }
-
-  .admin-stats {
-    grid-template-columns: repeat(3, 1fr);
-  }
 }
 
 @media (max-width: 800px) {
-  .admin-sidebar {
-    width: 70px;
-    padding: 20px 8px;
-  }
-
-  .admin-logo h2,
-  .admin-logo span,
-  .sidebar-item {
-    font-size: 0;
-  }
-
-  .sidebar-item i {
-    font-size: 18px;
-  }
-
-  .admin-logo {
-    padding: 10px 5px 30px;
-    text-align: center;
-  }
-
-  .admin-logo h2::before {
-    content: "A";
-    font-size: 22px;
-  }
-
   .admin-main {
     padding: 20px;
   }
@@ -820,10 +766,6 @@
   .student-header {
     flex-direction: column;
     align-items: flex-start;
-  }
-
-  .admin-stats {
-    grid-template-columns: 1fr;
   }
 
   .admin-content,
