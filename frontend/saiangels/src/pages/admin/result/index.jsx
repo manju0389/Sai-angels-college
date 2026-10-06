@@ -1,64 +1,141 @@
 import React, { useEffect, useState } from "react";
+import axios from "axios";
 import "../../../assets/css/results.css";
 
+const API = "https://sai-angels-college.onrender.com/api";
 
+const emptyStudent = {
+  name: "",
+  className: "",
+  result: "",
+  rank: "",
+  image: "",
+  imageFile: null,
+};
 
 const AdminResults = () => {
   const [sections, setSections] = useState([]);
   const [selectedSection, setSelectedSection] = useState(null);
+
   const [showSectionModal, setShowSectionModal] = useState(false);
   const [showStudentModal, setShowStudentModal] = useState(false);
+
   const [editingSection, setEditingSection] = useState(null);
   const [editingStudent, setEditingStudent] = useState(null);
+
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
 
   const [sectionForm, setSectionForm] = useState({
     title: "",
     description: "",
   });
 
-  const [studentForm, setStudentForm] = useState({
-    name: "",
-    className: "",
-    result: "",
-    rank: "",
-    image: "",
-  });
+  const [studentForm, setStudentForm] = useState(emptyStudent);
+
+  // ==========================================
+  // LOAD RESULTS FROM DATABASE
+  // ==========================================
 
   useEffect(() => {
-    const savedData = localStorage.getItem("schoolResults");
-
-    if (savedData) {
-      setSections(JSON.parse(savedData));
-    } else {
-      setSections(defaultData);
-      localStorage.setItem("schoolResults", JSON.stringify(defaultData));
-    }
+    fetchResults();
   }, []);
 
-  const saveData = (data) => {
-    setSections(data);
-    localStorage.setItem("schoolResults", JSON.stringify(data));
+  const fetchResults = async () => {
+    try {
+      setLoading(true);
+
+      const response = await axios.get(`${API}/results`);
+
+      console.log("RESULTS API RESPONSE:", response.data);
+
+      const data = Array.isArray(response.data)
+        ? response.data
+        : response.data.results || response.data.data || [];
+
+      setSections(data);
+    } catch (error) {
+      console.error(
+        "Failed to load results:",
+        error.response?.data || error.message
+      );
+
+      setSections([]);
+    } finally {
+      setLoading(false);
+    }
   };
+
+  // ==========================================
+  // LOAD SINGLE SECTION
+  // ==========================================
+
+  const fetchSingleSection = async (sectionId) => {
+    try {
+      const response = await axios.get(
+        `${API}/results/${sectionId}`
+      );
+
+      return response.data;
+    } catch (error) {
+      console.error(
+        "Failed to load section:",
+        error.response?.data || error.message
+      );
+
+      return null;
+    }
+  };
+
+  // ==========================================
+  // SELECT SECTION
+  // ==========================================
+
+  const handleSelectSection = async (section) => {
+    const freshSection = await fetchSingleSection(section.id);
+
+    if (freshSection) {
+      setSelectedSection(freshSection);
+    } else {
+      setSelectedSection(section);
+    }
+  };
+
+  // ==========================================
+  // ADD SECTION
+  // ==========================================
 
   const openAddSection = () => {
     setEditingSection(null);
+
     setSectionForm({
       title: "",
       description: "",
     });
+
     setShowSectionModal(true);
   };
+
+  // ==========================================
+  // EDIT SECTION
+  // ==========================================
 
   const openEditSection = (section) => {
     setEditingSection(section);
+
     setSectionForm({
-      title: section.title,
-      description: section.description,
+      title: section.title || "",
+      description: section.description || "",
     });
+
     setShowSectionModal(true);
   };
 
-  const handleSectionSubmit = (e) => {
+  // ==========================================
+  // SAVE SECTION
+  // ==========================================
+
+  const handleSectionSubmit = async (e) => {
     e.preventDefault();
 
     if (!sectionForm.title.trim()) {
@@ -66,46 +143,95 @@ const AdminResults = () => {
       return;
     }
 
-    if (editingSection) {
-      const updated = sections.map((section) =>
-        section.id === editingSection.id
-          ? {
-              ...section,
-              title: sectionForm.title,
-              description: sectionForm.description,
-            }
-          : section
+    try {
+      setSaving(true);
+
+      if (editingSection) {
+        await axios.put(
+          `${API}/results/${editingSection.id}`,
+          {
+            title: sectionForm.title.trim(),
+            description: sectionForm.description.trim(),
+          }
+        );
+
+        alert("Section updated successfully");
+      } else {
+        await axios.post(
+          `${API}/results`,
+          {
+            title: sectionForm.title.trim(),
+            description: sectionForm.description.trim(),
+          }
+        );
+
+        alert("Section added successfully");
+      }
+
+      await fetchResults();
+
+      setShowSectionModal(false);
+
+      setEditingSection(null);
+
+      setSectionForm({
+        title: "",
+        description: "",
+      });
+    } catch (error) {
+      console.error(
+        "Section save error:",
+        error.response?.data || error.message
       );
 
-      saveData(updated);
-    } else {
-      const newSection = {
-        id: Date.now(),
-        title: sectionForm.title,
-        description: sectionForm.description,
-        students: [],
-      };
-
-      saveData([...sections, newSection]);
+      alert(
+        error.response?.data?.message ||
+          "Failed to save section"
+      );
+    } finally {
+      setSaving(false);
     }
-
-    setShowSectionModal(false);
   };
 
-  const deleteSection = (sectionId) => {
+  // ==========================================
+  // DELETE SECTION
+  // ==========================================
+
+  const deleteSection = async (sectionId) => {
     const confirmDelete = window.confirm(
       "Are you sure you want to delete this section?"
     );
 
     if (!confirmDelete) return;
 
-    const updated = sections.filter((section) => section.id !== sectionId);
-    saveData(updated);
+    try {
+      await axios.delete(
+        `${API}/results/${sectionId}`
+      );
 
-    if (selectedSection?.id === sectionId) {
-      setSelectedSection(null);
+      if (selectedSection?.id === sectionId) {
+        setSelectedSection(null);
+      }
+
+      await fetchResults();
+
+      alert("Section deleted successfully");
+    } catch (error) {
+      console.error(
+        "Delete section error:",
+        error.response?.data || error.message
+      );
+
+      alert(
+        error.response?.data?.message ||
+          "Failed to delete section"
+      );
     }
   };
+
+  // ==========================================
+  // ADD STUDENT
+  // ==========================================
 
   const openAddStudent = () => {
     if (!selectedSection) {
@@ -114,46 +240,56 @@ const AdminResults = () => {
     }
 
     setEditingStudent(null);
+
     setStudentForm({
-      name: "",
-      className: "",
-      result: "",
-      rank: "",
-      image: "",
+      ...emptyStudent,
     });
+
     setShowStudentModal(true);
   };
+
+  // ==========================================
+  // EDIT STUDENT
+  // ==========================================
 
   const openEditStudent = (student) => {
     setEditingStudent(student);
+
     setStudentForm({
-      name: student.name,
-      className: student.className,
-      result: student.result,
-      rank: student.rank,
-      image: student.image,
+      name: student.name || "",
+      className: student.className || "",
+      result: student.result || "",
+      rank: student.rank || "",
+      image: student.image || "",
+      imageFile: null,
     });
+
     setShowStudentModal(true);
   };
 
+  // ==========================================
+  // IMAGE UPLOAD
+  // ==========================================
+
   const handleImageUpload = (e) => {
-    const file = e.target.files[0];
+    const file = e.target.files?.[0];
 
     if (!file) return;
 
-    const reader = new FileReader();
+    const previewUrl = URL.createObjectURL(file);
 
-    reader.onloadend = () => {
-      setStudentForm((prev) => ({
-        ...prev,
-        image: reader.result,
-      }));
-    };
-
-    reader.readAsDataURL(file);
+    setStudentForm((prev) => ({
+      ...prev,
+      image: previewUrl,
+      imageFile: file,
+    }));
   };
 
-  const handleStudentSubmit = (e) => {
+  // ==========================================
+  // SAVE STUDENT
+  // ==========================================
+
+  const handleStudentSubmit = async (e) => {
     e.preventDefault();
 
     if (!studentForm.name.trim()) {
@@ -161,172 +297,335 @@ const AdminResults = () => {
       return;
     }
 
-    if (!selectedSection) return;
-
-    let updatedSections;
-
-    if (editingStudent) {
-      updatedSections = sections.map((section) => {
-        if (section.id !== selectedSection.id) {
-          return section;
-        }
-
-        return {
-          ...section,
-          students: section.students.map((student) =>
-            student.id === editingStudent.id
-              ? {
-                  ...student,
-                  ...studentForm,
-                }
-              : student
-          ),
-        };
-      });
-    } else {
-      const newStudent = {
-        id: Date.now(),
-        ...studentForm,
-      };
-
-      updatedSections = sections.map((section) => {
-        if (section.id !== selectedSection.id) {
-          return section;
-        }
-
-        return {
-          ...section,
-          students: [...section.students, newStudent],
-        };
-      });
+    if (!selectedSection) {
+      alert("Please select a section");
+      return;
     }
 
-    saveData(updatedSections);
+    try {
+      setSaving(true);
 
-    const updatedSection = updatedSections.find(
-      (section) => section.id === selectedSection.id
-    );
+      const formData = new FormData();
 
-    setSelectedSection(updatedSection);
-    setShowStudentModal(false);
+      formData.append(
+        "name",
+        studentForm.name.trim()
+      );
+
+      formData.append(
+        "className",
+        studentForm.className.trim()
+      );
+
+      formData.append(
+        "result",
+        studentForm.result.trim()
+      );
+
+      formData.append(
+        "rank",
+        studentForm.rank.trim()
+      );
+
+      if (studentForm.imageFile) {
+        formData.append(
+          "image",
+          studentForm.imageFile
+        );
+      }
+
+      if (editingStudent) {
+        await axios.put(
+          `${API}/results/${selectedSection.id}/students/${editingStudent.id}`,
+          formData
+        );
+
+        alert("Student updated successfully");
+      } else {
+        await axios.post(
+          `${API}/results/${selectedSection.id}/students`,
+          formData
+        );
+
+        alert("Student added successfully");
+      }
+
+      await fetchResults();
+
+      const freshSection = await fetchSingleSection(
+        selectedSection.id
+      );
+
+      if (freshSection) {
+        setSelectedSection(freshSection);
+      }
+
+      setShowStudentModal(false);
+      setEditingStudent(null);
+
+      setStudentForm({
+        ...emptyStudent,
+      });
+    } catch (error) {
+      console.error(
+        "Student save error:",
+        error.response?.data || error.message
+      );
+
+      alert(
+        error.response?.data?.message ||
+          "Failed to save student"
+      );
+    } finally {
+      setSaving(false);
+    }
   };
 
-  const deleteStudent = (studentId) => {
+  // ==========================================
+  // DELETE STUDENT
+  // ==========================================
+
+  const deleteStudent = async (studentId) => {
+    if (!selectedSection) return;
+
     const confirmDelete = window.confirm(
       "Are you sure you want to delete this student?"
     );
 
     if (!confirmDelete) return;
 
-    const updatedSections = sections.map((section) => {
-      if (section.id !== selectedSection.id) {
-        return section;
+    try {
+      await axios.delete(
+        `${API}/results/${selectedSection.id}/students/${studentId}`
+      );
+
+      await fetchResults();
+
+      const freshSection = await fetchSingleSection(
+        selectedSection.id
+      );
+
+      if (freshSection) {
+        setSelectedSection(freshSection);
       }
 
-      return {
-        ...section,
-        students: section.students.filter(
-          (student) => student.id !== studentId
-        ),
-      };
-    });
+      alert("Student deleted successfully");
+    } catch (error) {
+      console.error(
+        "Delete student error:",
+        error.response?.data || error.message
+      );
 
-    saveData(updatedSections);
-
-    const updatedSection = updatedSections.find(
-      (section) => section.id === selectedSection.id
-    );
-
-    setSelectedSection(updatedSection);
+      alert(
+        error.response?.data?.message ||
+          "Failed to delete student"
+      );
+    }
   };
 
+  // ==========================================
+  // TOTAL STUDENTS
+  // ==========================================
+
   const totalStudents = sections.reduce(
-    (total, section) => total + section.students.length,
+    (total, section) =>
+      total +
+      (Array.isArray(section.students)
+        ? section.students.length
+        : 0),
     0
   );
+
+  // ==========================================
+  // LOADING
+  // ==========================================
+
+  if (loading) {
+    return (
+      <div className="admin-results">
+        <main className="admin-main">
+          <div className="admin-header">
+            <div>
+              <h1>Results Management</h1>
+              <p>Loading results...</p>
+            </div>
+          </div>
+        </main>
+      </div>
+    );
+  }
+
+  // ==========================================
+  // UI
+  // ==========================================
 
   return (
     <div className="admin-results">
       <main className="admin-main">
+
+        {/* ======================================
+            HEADER
+        ====================================== */}
+
         <header className="admin-header">
           <div>
             <h1>Results Management</h1>
-            <p>Manage your school results and achievements.</p>
+
+            <p>
+              Manage your school results and
+              achievements.
+            </p>
           </div>
 
-          <button className="add-section-btn" onClick={openAddSection}>
+          <button
+            className="add-section-btn"
+            onClick={openAddSection}
+          >
             <i className="fa-solid fa-plus"></i>
             Add Section
           </button>
         </header>
 
+        {/* ======================================
+            RESULT SECTIONS
+        ====================================== */}
+
         <section className="admin-content">
+
           <div className="content-title">
             <div>
               <h2>Result Sections</h2>
+
+              <p>
+                {sections.length} Sections ·{" "}
+                {totalStudents} Students
+              </p>
             </div>
           </div>
 
-          <div className="section-grid">
-            {sections.map((section) => (
-              <div
-                className={`section-admin-card form-control ${
-                  selectedSection?.id === section.id ? "selected" : ""
-                }`}
-                key={section.id}
-              >
-                <div className="section-card-top">
-                  <div className="section-actions">
-                    <button
-                      onClick={() => openEditSection(section)}
-                      title="Edit section"
-                    >
-                      <i className="fa-solid fa-pen"></i>
-                    </button>
+          {sections.length === 0 ? (
+            <div className="empty-state">
+              <i className="fa-solid fa-folder-open"></i>
 
-                    <button
-                      onClick={() => deleteSection(section.id)}
-                      title="Delete section"
-                    >
-                      <i className="fa-solid fa-trash"></i>
-                    </button>
+              <p>
+                No result sections found.
+              </p>
+
+              <button onClick={openAddSection}>
+                Add First Section
+              </button>
+            </div>
+          ) : (
+            <div className="section-grid">
+
+              {sections.map((section) => {
+
+                const students = Array.isArray(
+                  section.students
+                )
+                  ? section.students
+                  : [];
+
+                return (
+                  <div
+                    className={`section-admin-card form-control ${
+                      selectedSection?.id === section.id
+                        ? "selected"
+                        : ""
+                    }`}
+                    key={section.id}
+                  >
+
+                    <div className="section-card-top">
+
+                      <div className="section-actions">
+
+                        <button
+                          onClick={() =>
+                            openEditSection(section)
+                          }
+                          title="Edit section"
+                        >
+                          <i className="fa-solid fa-pen"></i>
+                        </button>
+
+                        <button
+                          onClick={() =>
+                            deleteSection(section.id)
+                          }
+                          title="Delete section"
+                        >
+                          <i className="fa-solid fa-trash"></i>
+                        </button>
+
+                      </div>
+
+                    </div>
+
+                    <h3>{section.title}</h3>
+
+                    <p>
+                      {section.description}
+                    </p>
+
+                    <div className="section-footer">
+
+                      <span>
+                        <i className="fa-solid fa-users"></i>
+
+                        {students.length} Students
+                      </span>
+
+                      <button
+                        onClick={() =>
+                          handleSelectSection(section)
+                        }
+                      >
+                        Manage
+
+                        <i className="fa-solid fa-arrow-right"></i>
+                      </button>
+
+                    </div>
+
                   </div>
-                </div>
+                );
+              })}
 
-                <h3>{section.title}</h3>
-                <p>{section.description}</p>
+            </div>
+          )}
 
-                <div className="section-footer">
-                  <span>
-                    <i className="fa-solid fa-users"></i>
-                    {section.students.length} Students
-                  </span>
-
-                  <button onClick={() => setSelectedSection(section)}>
-                    Manage
-                    <i className="fa-solid fa-arrow-right"></i>
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
         </section>
+
+        {/* ======================================
+            STUDENT MANAGEMENT
+        ====================================== */}
 
         {selectedSection && (
           <section className="students-management">
+
             <div className="student-header">
+
               <div>
-                <h2>{selectedSection.title}</h2>
+                <h2>
+                  {selectedSection.title}
+                </h2>
               </div>
 
-              <button className="add-student-btn" onClick={openAddStudent}>
+              <button
+                className="add-student-btn"
+                onClick={openAddStudent}
+              >
                 <i className="fa-solid fa-plus"></i>
                 Add Student
               </button>
+
             </div>
 
             <div className="students-table-wrapper">
+
               <table className="students-table">
+
                 <thead>
                   <tr>
                     <th>Student</th>
@@ -338,95 +637,164 @@ const AdminResults = () => {
                 </thead>
 
                 <tbody>
-                  {selectedSection.students.length === 0 ? (
-                    <tr>
-                      <td colSpan="5" className="empty-state">
-                        <i className="fa-solid fa-users"></i>
-                        <p>No students added yet.</p>
 
-                        <button onClick={openAddStudent}>
+                  {!selectedSection.students ||
+                  selectedSection.students.length === 0 ? (
+                    <tr>
+
+                      <td
+                        colSpan="5"
+                        className="empty-state"
+                      >
+                        <i className="fa-solid fa-users"></i>
+
+                        <p>
+                          No students added yet.
+                        </p>
+
+                        <button
+                          onClick={openAddStudent}
+                        >
                           Add First Student
                         </button>
+
                       </td>
+
                     </tr>
                   ) : (
-                    selectedSection.students.map((student) => (
-                      <tr key={student.id}>
-                        <td>
-                          <div className="student-profile">
-                            {student.image ? (
-                              <img
-                                src={student.image}
-                                alt={student.name}
-                              />
-                            ) : (
-                              <div className="student-placeholder">
-                                <i className="fa-solid fa-user"></i>
-                              </div>
-                            )}
+                    selectedSection.students.map(
+                      (student) => (
+                        <tr key={student.id}>
 
-                            <strong>{student.name}</strong>
-                          </div>
-                        </td>
+                          <td>
 
-                        <td>{student.className}</td>
+                            <div className="student-profile">
 
-                        <td>
-                          <span className="result-value">
-                            {student.result}
-                          </span>
-                        </td>
+                              {student.image ? (
+                                <img
+                                  src={student.image}
+                                  alt={student.name}
+                                />
+                              ) : (
+                                <div className="student-placeholder">
+                                  <i className="fa-solid fa-user"></i>
+                                </div>
+                              )}
 
-                        <td>
-                          <span className="rank-value">{student.rank}</span>
-                        </td>
+                              <strong>
+                                {student.name}
+                              </strong>
 
-                        <td>
-                          <div className="table-actions">
-                            <button
-                              className="edit-btn"
-                              onClick={() => openEditStudent(student)}
-                            >
-                              <i className="fa-solid fa-pen"></i>
-                            </button>
+                            </div>
 
-                            <button
-                              className="deletes-btn"
-                              onClick={() => deleteStudent(student.id)}
-                            >
-                              <i className="fa-solid fa-trash"></i>
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))
+                          </td>
+
+                          <td>
+                            {student.className}
+                          </td>
+
+                          <td>
+                            <span className="result-value">
+                              {student.result}
+                            </span>
+                          </td>
+
+                          <td>
+                            <span className="rank-value">
+                              {student.rank}
+                            </span>
+                          </td>
+
+                          <td>
+
+                            <div className="table-actions">
+
+                              <button
+                                className="edit-btn"
+                                onClick={() =>
+                                  openEditStudent(
+                                    student
+                                  )
+                                }
+                              >
+                                <i className="fa-solid fa-pen"></i>
+                              </button>
+
+                              <button
+                                className="deletes-btn"
+                                onClick={() =>
+                                  deleteStudent(
+                                    student.id
+                                  )
+                                }
+                              >
+                                <i className="fa-solid fa-trash"></i>
+                              </button>
+
+                            </div>
+
+                          </td>
+
+                        </tr>
+                      )
+                    )
                   )}
+
                 </tbody>
+
               </table>
+
             </div>
+
           </section>
         )}
+
       </main>
+
+      {/* ======================================
+          SECTION MODAL
+      ====================================== */}
 
       {showSectionModal && (
         <div className="modal-overlay">
+
           <div className="admin-modal">
+
             <div className="modal-header">
+
               <div>
+
                 <h2>
-                  {editingSection ? "Edit Section" : "Add Result Section"}
+                  {editingSection
+                    ? "Edit Section"
+                    : "Add Result Section"}
                 </h2>
-                <p>Enter section information.</p>
+
+                <p>
+                  Enter section information.
+                </p>
+
               </div>
 
-              <button onClick={() => setShowSectionModal(false)}>
+              <button
+                onClick={() =>
+                  setShowSectionModal(false)
+                }
+              >
                 <i className="fa-solid fa-xmark"></i>
               </button>
+
             </div>
 
-            <form onSubmit={handleSectionSubmit}>
+            <form
+              onSubmit={handleSectionSubmit}
+            >
+
               <div className="form-group">
-                <label>Section Title</label>
+
+                <label>
+                  Section Title
+                </label>
 
                 <input
                   type="text"
@@ -439,85 +807,152 @@ const AdminResults = () => {
                     })
                   }
                 />
+
               </div>
 
               <div className="form-group">
-                <label>Description</label>
+
+                <label>
+                  Description
+                </label>
 
                 <textarea
                   placeholder="Enter section description..."
                   rows="4"
-                  value={sectionForm.description}
+                  value={
+                    sectionForm.description
+                  }
                   onChange={(e) =>
                     setSectionForm({
                       ...sectionForm,
-                      description: e.target.value,
+                      description:
+                        e.target.value,
                     })
                   }
                 />
+
               </div>
 
               <div className="modal-buttons">
+
                 <button
                   type="button"
                   className="cancel-btn"
-                  onClick={() => setShowSectionModal(false)}
+                  onClick={() =>
+                    setShowSectionModal(false)
+                  }
                 >
                   Cancel
                 </button>
 
-                <button type="submit" className="save-btn">
+                <button
+                  type="submit"
+                  className="save-btn"
+                  disabled={saving}
+                >
                   <i className="fa-solid fa-check"></i>
-                  {editingSection ? "Update Section" : "Save Section"}
+
+                  {saving
+                    ? "Saving..."
+                    : editingSection
+                    ? "Update Section"
+                    : "Save Section"}
                 </button>
+
               </div>
+
             </form>
+
           </div>
+
         </div>
       )}
 
+      {/* ======================================
+          STUDENT MODAL
+      ====================================== */}
+
       {showStudentModal && (
         <div className="modal-overlay">
+
           <div className="admin-modal student-modal">
+
             <div className="modal-header">
+
               <div>
-                <h2>{editingStudent ? "Edit Student" : "Add Student"}</h2>
-                <p>{selectedSection?.title}</p>
+
+                <h2>
+                  {editingStudent
+                    ? "Edit Student"
+                    : "Add Student"}
+                </h2>
+
+                <p>
+                  {selectedSection?.title}
+                </p>
+
               </div>
 
-              <button onClick={() => setShowStudentModal(false)}>
+              <button
+                onClick={() =>
+                  setShowStudentModal(false)
+                }
+              >
                 <i className="fa-solid fa-xmark"></i>
               </button>
+
             </div>
 
-            <form onSubmit={handleStudentSubmit}>
+            <form
+              onSubmit={handleStudentSubmit}
+            >
+
               <div className="image-upload">
+
                 <div className="image-preview">
+
                   {studentForm.image ? (
-                    <img src={studentForm.image} alt="Preview" />
+                    <img
+                      src={studentForm.image}
+                      alt="Preview"
+                    />
                   ) : (
                     <i className="fa-solid fa-user"></i>
                   )}
+
                 </div>
 
                 <div>
+
                   <label className="upload-button">
+
                     <i className="fa-solid fa-camera"></i>
+
                     Choose Student Photo
 
                     <input
                       type="file"
                       accept="image/*"
-                      onChange={handleImageUpload}
+                      onChange={
+                        handleImageUpload
+                      }
                     />
+
                   </label>
 
-                  <small>JPG, PNG or WEBP</small>
+                  <small>
+                    JPG, PNG or WEBP
+                  </small>
+
                 </div>
+
               </div>
 
               <div className="form-group">
-                <label>Student Name</label>
+
+                <label>
+                  Student Name
+                </label>
 
                 <input
                   type="text"
@@ -530,27 +965,39 @@ const AdminResults = () => {
                     })
                   }
                 />
+
               </div>
 
               <div className="form-row">
+
                 <div className="form-group">
-                  <label>Class / Course</label>
+
+                  <label>
+                    Class / Course
+                  </label>
 
                   <input
                     type="text"
                     placeholder="Class 10"
-                    value={studentForm.className}
+                    value={
+                      studentForm.className
+                    }
                     onChange={(e) =>
                       setStudentForm({
                         ...studentForm,
-                        className: e.target.value,
+                        className:
+                          e.target.value,
                       })
                     }
                   />
+
                 </div>
 
                 <div className="form-group">
-                  <label>Result</label>
+
+                  <label>
+                    Result
+                  </label>
 
                   <input
                     type="text"
@@ -559,15 +1006,21 @@ const AdminResults = () => {
                     onChange={(e) =>
                       setStudentForm({
                         ...studentForm,
-                        result: e.target.value,
+                        result:
+                          e.target.value,
                       })
                     }
                   />
+
                 </div>
+
               </div>
 
               <div className="form-group">
-                <label>Rank / Achievement</label>
+
+                <label>
+                  Rank / Achievement
+                </label>
 
                 <input
                   type="text"
@@ -580,26 +1033,44 @@ const AdminResults = () => {
                     })
                   }
                 />
+
               </div>
 
               <div className="modal-buttons">
+
                 <button
                   type="button"
                   className="cancel-btn"
-                  onClick={() => setShowStudentModal(false)}
+                  onClick={() =>
+                    setShowStudentModal(false)
+                  }
                 >
                   Cancel
                 </button>
 
-                <button type="submit" className="save-btn">
+                <button
+                  type="submit"
+                  className="save-btn"
+                  disabled={saving}
+                >
                   <i className="fa-solid fa-check"></i>
-                  {editingStudent ? "Update Student" : "Save Student"}
+
+                  {saving
+                    ? "Saving..."
+                    : editingStudent
+                    ? "Update Student"
+                    : "Save Student"}
                 </button>
+
               </div>
+
             </form>
+
           </div>
+
         </div>
       )}
+
     </div>
   );
 };
