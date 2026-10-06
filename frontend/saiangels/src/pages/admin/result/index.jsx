@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "../../../assets/css/results.css";
 
+const API = "https://sai-angels-college.onrender.com/api";
 
 const AdminResults = () => {
   const [sections, setSections] = useState([]);
