@@ -5,13 +5,14 @@ import "../../../assets/css/results.css";
 const API = "https://sai-angels-college.onrender.com/api";
 
 const emptyStudent = {
-  name: "",
+  studentName: "",
   className: "",
-  result: "",
+  score: "",
   rank: "",
   image: "",
   imageFile: null,
 };
+
 
 const AdminResults = () => {
   const [sections, setSections] = useState([]);
@@ -727,7 +728,7 @@ const handleSelectSection = async (section) => {
                   ) : (
                     selectedSection.students.map(
                       (student) => (
-                        <tr key={student.id}>
+                        <tr key={student._id}>
 
                           <td>
 
@@ -745,7 +746,7 @@ const handleSelectSection = async (section) => {
                               )}
 
                               <strong>
-                                {student.name}
+                                {student.studentName}
                               </strong>
 
                             </div>
@@ -758,7 +759,7 @@ const handleSelectSection = async (section) => {
 
                           <td>
                             <span className="result-value">
-                              {student.result}
+                              {student.score}
                             </span>
                           </td>
 
@@ -787,7 +788,7 @@ const handleSelectSection = async (section) => {
                                 className="deletes-btn"
                                 onClick={() =>
                                   deleteStudent(
-                                    student.id
+                                    student._id
                                   )
                                 }
                               >
