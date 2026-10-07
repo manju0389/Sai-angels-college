@@ -1,6 +1,8 @@
 const Result = require("../models/Result");
 
-const { uploadToCloudinary } = require("../middleware/upload");
+const {
+  uploadToCloudinary,
+} = require("../middleware/upload");
 
 const cloudinary = require("../config/cloudinary");
 
@@ -37,7 +39,9 @@ const deleteCloudinaryImage = async (
   try {
     await cloudinary.uploader.destroy(publicId, {
       resource_type:
-        mediaType === "video" ? "video" : "image",
+        mediaType === "video"
+          ? "video"
+          : "image",
     });
   } catch (error) {
     console.error(
@@ -53,15 +57,18 @@ const deleteCloudinaryImage = async (
 
 exports.getResults = async (req, res) => {
   try {
-    const results = await Result.find().sort({
-      createdAt: -1,
-    });
+    const results = await Result.find()
+      .sort({ createdAt: -1 })
+      .lean();
 
-    res.status(200).json(results);
+    return res.status(200).json(results);
   } catch (error) {
-    console.error("Get Results Error:", error);
+    console.error(
+      "Get Results Error:",
+      error
+    );
 
-    res.status(500).json({
+    return res.status(500).json({
       message: "Failed to fetch results",
     });
   }
@@ -73,9 +80,9 @@ exports.getResults = async (req, res) => {
 
 exports.getResult = async (req, res) => {
   try {
-    const result = await Result.findById(
-      req.params.id
-    );
+    const { id } = req.params;
+
+    const result = await Result.findById(id).lean();
 
     if (!result) {
       return res.status(404).json({
@@ -83,14 +90,14 @@ exports.getResult = async (req, res) => {
       });
     }
 
-    res.status(200).json(result);
+    return res.status(200).json(result);
   } catch (error) {
     console.error(
       "Get Single Result Error:",
       error
     );
 
-    res.status(500).json({
+    return res.status(500).json({
       message: "Failed to fetch result",
     });
   }
@@ -102,35 +109,66 @@ exports.getResult = async (req, res) => {
 
 exports.createSection = async (req, res) => {
   try {
+    console.log(
+      "CREATE SECTION BODY:",
+      req.body
+    );
+
     const {
       title,
       description,
-    } = req.body;
+    } = req.body || {};
 
-    if (!title || !title.trim()) {
+    // --------------------------------------
+    // VALIDATE TITLE
+    // --------------------------------------
+
+    if (
+      typeof title !== "string" ||
+      !title.trim()
+    ) {
       return res.status(400).json({
         message: "Section title is required",
       });
     }
 
+    const cleanTitle = title.trim();
+
+    // --------------------------------------
+    // CHECK DUPLICATE
+    // --------------------------------------
+
     const existingSection =
       await Result.findOne({
-        title: title.trim(),
+        title: cleanTitle,
       });
 
     if (existingSection) {
       return res.status(409).json({
-        message: "A section with this title already exists",
+        message:
+          "A section with this title already exists",
       });
     }
 
+    // --------------------------------------
+    // CREATE
+    // --------------------------------------
+
     const result = await Result.create({
-      title: title.trim(),
-      description: description || "",
+      title: cleanTitle,
+      description:
+        typeof description === "string"
+          ? description.trim()
+          : "",
       students: [],
     });
 
-    res.status(201).json({
+    console.log(
+      "SECTION CREATED:",
+      result._id
+    );
+
+    return res.status(201).json({
       message: "Section created successfully",
       result,
     });
@@ -140,8 +178,9 @@ exports.createSection = async (req, res) => {
       error
     );
 
-    res.status(500).json({
+    return res.status(500).json({
       message: "Failed to create section",
+      error: error.message,
     });
   }
 };
@@ -155,9 +194,12 @@ exports.updateSection = async (req, res) => {
     const {
       title,
       description,
-    } = req.body;
+    } = req.body || {};
 
-    if (!title || !title.trim()) {
+    if (
+      typeof title !== "string" ||
+      !title.trim()
+    ) {
       return res.status(400).json({
         message: "Section title is required",
       });
@@ -173,13 +215,32 @@ exports.updateSection = async (req, res) => {
       });
     }
 
+    // Check duplicate title excluding current section
+    const duplicate =
+      await Result.findOne({
+        title: title.trim(),
+        _id: {
+          $ne: section._id,
+        },
+      });
+
+    if (duplicate) {
+      return res.status(409).json({
+        message:
+          "A section with this title already exists",
+      });
+    }
+
     section.title = title.trim();
+
     section.description =
-      description || "";
+      typeof description === "string"
+        ? description.trim()
+        : "";
 
     await section.save();
 
-    res.status(200).json({
+    return res.status(200).json({
       message: "Section updated successfully",
       result: section,
     });
@@ -189,8 +250,9 @@ exports.updateSection = async (req, res) => {
       error
     );
 
-    res.status(500).json({
+    return res.status(500).json({
       message: "Failed to update section",
+      error: error.message,
     });
   }
 };
@@ -211,10 +273,7 @@ exports.deleteSection = async (req, res) => {
       });
     }
 
-    // --------------------------------------
-    // DELETE ALL SECTION IMAGES FROM CLOUDINARY
-    // --------------------------------------
-
+    // Delete all Cloudinary images
     for (const student of section.students) {
       if (student.cloudinary_id) {
         await deleteCloudinaryImage(
@@ -224,15 +283,11 @@ exports.deleteSection = async (req, res) => {
       }
     }
 
-    // --------------------------------------
-    // DELETE SECTION FROM MONGODB
-    // --------------------------------------
-
     await Result.findByIdAndDelete(
       req.params.id
     );
 
-    res.status(200).json({
+    return res.status(200).json({
       message:
         "Section and all associated images deleted successfully",
     });
@@ -242,7 +297,7 @@ exports.deleteSection = async (req, res) => {
       error
     );
 
-    res.status(500).json({
+    return res.status(500).json({
       message: "Failed to delete section",
     });
   }
@@ -264,59 +319,75 @@ exports.createStudent = async (req, res) => {
       });
     }
 
-    if (!req.body.studentName) {
+    const {
+      studentName,
+      className,
+      score,
+      rank,
+    } = req.body || {};
+
+    // --------------------------------------
+    // VALIDATION
+    // --------------------------------------
+
+    if (
+      typeof studentName !== "string" ||
+      !studentName.trim()
+    ) {
       return res.status(400).json({
         message: "Student name is required",
       });
     }
 
-    if (!req.body.className) {
+    if (
+      typeof className !== "string" ||
+      !className.trim()
+    ) {
       return res.status(400).json({
         message: "Class / course is required",
       });
     }
 
-    if (!req.body.score) {
+    if (
+      typeof score !== "string" ||
+      !score.trim()
+    ) {
       return res.status(400).json({
         message: "Result is required",
       });
     }
 
-    if (!req.body.rank) {
+    if (
+      typeof rank !== "string" ||
+      !rank.trim()
+    ) {
       return res.status(400).json({
-        message: "Rank / achievement is required",
+        message:
+          "Rank / achievement is required",
       });
     }
-
-    let uploaded = null;
 
     // --------------------------------------
     // UPLOAD IMAGE
     // --------------------------------------
+
+    let uploaded = null;
 
     if (req.file) {
       uploaded = await uploadImage(req.file);
     }
 
     // --------------------------------------
-    // CREATE STUDENT
+    // ADD STUDENT
     // --------------------------------------
 
     section.students.push({
-      studentName:
-        req.body.studentName.trim(),
+      studentName: studentName.trim(),
+      className: className.trim(),
+      score: score.trim(),
+      rank: rank.trim(),
 
-      className:
-        req.body.className.trim(),
-
-      score:
-        req.body.score.trim(),
-
-      rank:
-        req.body.rank.trim(),
-
-      image:
-        uploaded?.url || "",
+      image: uploaded?.url || "",
 
       cloudinary_id:
         uploaded?.id || "",
@@ -332,7 +403,7 @@ exports.createStudent = async (req, res) => {
         section.students.length - 1
       ];
 
-    res.status(201).json({
+    return res.status(201).json({
       message: "Student added successfully",
       student: newStudent,
       result: section,
@@ -343,8 +414,9 @@ exports.createStudent = async (req, res) => {
       error
     );
 
-    res.status(500).json({
+    return res.status(500).json({
       message: "Failed to add student",
+      error: error.message,
     });
   }
 };
@@ -376,28 +448,29 @@ exports.updateStudent = async (req, res) => {
       });
     }
 
-    // --------------------------------------
-    // UPDATE TEXT FIELDS
-    // --------------------------------------
+    const {
+      studentName,
+      className,
+      score,
+      rank,
+    } = req.body || {};
 
-    if (req.body.studentName !== undefined) {
+    if (studentName !== undefined) {
       student.studentName =
-        req.body.studentName.trim();
+        studentName.trim();
     }
 
-    if (req.body.className !== undefined) {
+    if (className !== undefined) {
       student.className =
-        req.body.className.trim();
+        className.trim();
     }
 
-    if (req.body.score !== undefined) {
-      student.score =
-        req.body.score.trim();
+    if (score !== undefined) {
+      student.score = score.trim();
     }
 
-    if (req.body.rank !== undefined) {
-      student.rank =
-        req.body.rank.trim();
+    if (rank !== undefined) {
+      student.rank = rank.trim();
     }
 
     // --------------------------------------
@@ -405,7 +478,6 @@ exports.updateStudent = async (req, res) => {
     // --------------------------------------
 
     if (req.file) {
-      // Delete old Cloudinary image first
       if (student.cloudinary_id) {
         await deleteCloudinaryImage(
           student.cloudinary_id,
@@ -413,24 +485,21 @@ exports.updateStudent = async (req, res) => {
         );
       }
 
-      // Upload new image
       const uploaded =
         await uploadImage(req.file);
 
-      student.image =
-        uploaded.url;
-
+      student.image = uploaded.url;
       student.cloudinary_id =
         uploaded.id;
-
       student.media_type =
         uploaded.type;
     }
 
     await section.save();
 
-    res.status(200).json({
-      message: "Student updated successfully",
+    return res.status(200).json({
+      message:
+        "Student updated successfully",
       student,
       result: section,
     });
@@ -440,8 +509,9 @@ exports.updateStudent = async (req, res) => {
       error
     );
 
-    res.status(500).json({
+    return res.status(500).json({
       message: "Failed to update student",
+      error: error.message,
     });
   }
 };
@@ -473,10 +543,6 @@ exports.deleteStudent = async (req, res) => {
       });
     }
 
-    // --------------------------------------
-    // DELETE CLOUDINARY IMAGE
-    // --------------------------------------
-
     if (student.cloudinary_id) {
       await deleteCloudinaryImage(
         student.cloudinary_id,
@@ -484,15 +550,11 @@ exports.deleteStudent = async (req, res) => {
       );
     }
 
-    // --------------------------------------
-    // DELETE STUDENT FROM MONGODB
-    // --------------------------------------
-
     student.deleteOne();
 
     await section.save();
 
-    res.status(200).json({
+    return res.status(200).json({
       message:
         "Student and image deleted successfully",
       result: section,
@@ -503,8 +565,9 @@ exports.deleteStudent = async (req, res) => {
       error
     );
 
-    res.status(500).json({
+    return res.status(500).json({
       message: "Failed to delete student",
+      error: error.message,
     });
   }
 };
