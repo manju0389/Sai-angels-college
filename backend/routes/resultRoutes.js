@@ -13,7 +13,7 @@ const {
   createStudent,
   updateStudent,
   deleteStudent,
-} = require("../controllers/resultsController");
+} = require("../controllers/resultController");
 
 // ==========================================
 // RESULT SECTIONS
