@@ -1066,12 +1066,11 @@ const handleSelectSection = async (section) => {
                   <input
                     type="text"
                     placeholder="95%"
-                    value={studentForm.result}
+                    value={studentForm.score}
                     onChange={(e) =>
                       setStudentForm({
                         ...studentForm,
-                        result:
-                          e.target.value,
+                        score: e.target.value,
                       })
                     }
                   />
