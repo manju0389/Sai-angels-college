@@ -1,5 +1,9 @@
 const mongoose = require("mongoose");
 
+// ==========================================
+// STUDENT RESULT SCHEMA
+// ==========================================
+
 const studentResultSchema = new mongoose.Schema(
   {
     studentName: {
@@ -46,6 +50,10 @@ const studentResultSchema = new mongoose.Schema(
   }
 );
 
+// ==========================================
+// RESULT SECTION SCHEMA
+// ==========================================
+
 const resultSchema = new mongoose.Schema(
   {
     title: {
@@ -70,4 +78,7 @@ const resultSchema = new mongoose.Schema(
   }
 );
 
-module.exports = mongoose.model("Result", resultSchema);
+module.exports = mongoose.model(
+  "Result",
+  resultSchema
+);
