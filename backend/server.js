@@ -11,7 +11,7 @@ const galleryRoutes = require("./routes/galleryRoutes");
 const achievementsRoutes = require("./routes/achievementsRoutes");
 const aboutRoutes = require("./routes/aboutRoutes");
 const homeRoutes = require("./routes/homeRoutes");
-const resultsRoutes = require("./routes/resultsRoutes");
+const resultRoutes = require("./routes/resultRoutes");
 const { verifyToken } = require("./middleware/authMiddleware");
 
 const app = express();
@@ -60,7 +60,7 @@ app.use("/api/gallery", galleryRoutes);
 app.use("/api/achievements", achievementsRoutes);
 app.use("/api/about", aboutRoutes);
 app.use("/api", homeRoutes);
-app.use("/api/results", resultsRoutes);
+app.use("/api/results", resultRoutes);
 
 // ================= PROTECTED ROUTE =================
 app.get("/api/protected", verifyToken, (req, res) => {
