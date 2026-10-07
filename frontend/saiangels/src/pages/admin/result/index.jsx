@@ -71,35 +71,39 @@ const AdminResults = () => {
   // ==========================================
 
   const fetchSingleSection = async (sectionId) => {
-    try {
-      const response = await axios.get(
-        `${API}/results/${sectionId}`
-      );
+  try {
+    const response = await axios.get(
+      `${API}/results/${sectionId}`
+    );
 
-      return response.data;
-    } catch (error) {
-      console.error(
-        "Failed to load section:",
-        error.response?.data || error.message
-      );
+    return response.data;
+  } catch (error) {
+    console.error(
+      "Failed to load section:",
+      error.response?.data ||
+        error.message
+    );
 
-      return null;
-    }
-  };
+    return null;
+  }
+};
+
 
   // ==========================================
   // SELECT SECTION
   // ==========================================
 
-  const handleSelectSection = async (section) => {
-    const freshSection = await fetchSingleSection(section.id);
+const handleSelectSection = async (section) => {
+  const freshSection =
+    await fetchSingleSection(section._id);
 
-    if (freshSection) {
-      setSelectedSection(freshSection);
-    } else {
-      setSelectedSection(section);
-    }
-  };
+  if (freshSection) {
+    setSelectedSection(freshSection);
+  } else {
+    setSelectedSection(section);
+  }
+};
+
 
   // ==========================================
   // ADD SECTION
@@ -136,98 +140,120 @@ const AdminResults = () => {
   // ==========================================
 
   const handleSectionSubmit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    if (!sectionForm.title.trim()) {
-      alert("Please enter section title");
-      return;
-    }
+  const title = sectionForm.title.trim();
+  const description =
+    sectionForm.description.trim();
 
-    try {
-      setSaving(true);
+  if (!title) {
+    alert("Please enter section title");
+    return;
+  }
 
-      if (editingSection) {
-        await axios.put(
-          `${API}/results/${editingSection.id}`,
-          {
-            title: sectionForm.title.trim(),
-            description: sectionForm.description.trim(),
-          }
-        );
+  try {
+    setSaving(true);
 
-        alert("Section updated successfully");
-      } else {
-        await axios.post(
-          `${API}/results`,
-          {
-            title: sectionForm.title.trim(),
-            description: sectionForm.description.trim(),
-          }
-        );
+    let response;
 
-        alert("Section added successfully");
-      }
-
-      await fetchResults();
-
-      setShowSectionModal(false);
-
-      setEditingSection(null);
-
-      setSectionForm({
-        title: "",
-        description: "",
-      });
-    } catch (error) {
-      console.error(
-        "Section save error:",
-        error.response?.data || error.message
+    if (editingSection) {
+      response = await axios.put(
+        `${API}/results/${editingSection._id}`,
+        {
+          title,
+          description,
+        }
       );
 
       alert(
-        error.response?.data?.message ||
-          "Failed to save section"
+        response.data?.message ||
+          "Section updated successfully"
       );
-    } finally {
-      setSaving(false);
+    } else {
+      response = await axios.post(
+        `${API}/results`,
+        {
+          title,
+          description,
+        }
+      );
+
+      alert(
+        response.data?.message ||
+          "Section added successfully"
+      );
     }
-  };
+
+    await fetchResults();
+
+    setShowSectionModal(false);
+    setEditingSection(null);
+
+    setSectionForm({
+      title: "",
+      description: "",
+    });
+  } catch (error) {
+    console.error(
+      "SECTION SAVE ERROR:",
+      error
+    );
+
+    console.error(
+      "SERVER RESPONSE:",
+      error.response?.data
+    );
+
+    alert(
+      error.response?.data?.message ||
+        error.message ||
+        "Failed to save section"
+    );
+  } finally {
+    setSaving(false);
+  }
+};
+
 
   // ==========================================
   // DELETE SECTION
   // ==========================================
 
   const deleteSection = async (sectionId) => {
-    const confirmDelete = window.confirm(
-      "Are you sure you want to delete this section?"
+  const confirmDelete = window.confirm(
+    "Are you sure you want to delete this section?"
+  );
+
+  if (!confirmDelete) return;
+
+  try {
+    await axios.delete(
+      `${API}/results/${sectionId}`
     );
 
-    if (!confirmDelete) return;
-
-    try {
-      await axios.delete(
-        `${API}/results/${sectionId}`
-      );
-
-      if (selectedSection?.id === sectionId) {
-        setSelectedSection(null);
-      }
-
-      await fetchResults();
-
-      alert("Section deleted successfully");
-    } catch (error) {
-      console.error(
-        "Delete section error:",
-        error.response?.data || error.message
-      );
-
-      alert(
-        error.response?.data?.message ||
-          "Failed to delete section"
-      );
+    if (
+      selectedSection?._id === sectionId
+    ) {
+      setSelectedSection(null);
     }
-  };
+
+    await fetchResults();
+
+    alert("Section deleted successfully");
+  } catch (error) {
+    console.error(
+      "Delete section error:",
+      error.response?.data ||
+        error.message
+    );
+
+    alert(
+      error.response?.data?.message ||
+        "Failed to delete section"
+    );
+  }
+};
+
 
   // ==========================================
   // ADD STUDENT
@@ -253,19 +279,30 @@ const AdminResults = () => {
   // ==========================================
 
   const openEditStudent = (student) => {
-    setEditingStudent(student);
+  setEditingStudent(student);
 
-    setStudentForm({
-      name: student.name || "",
-      className: student.className || "",
-      result: student.result || "",
-      rank: student.rank || "",
-      image: student.image || "",
-      imageFile: null,
-    });
+  setStudentForm({
+    studentName:
+      student.studentName || "",
 
-    setShowStudentModal(true);
-  };
+    className:
+      student.className || "",
+
+    score:
+      student.score || "",
+
+    rank:
+      student.rank || "",
+
+    image:
+      student.image || "",
+
+    imageFile: null,
+  });
+
+  setShowStudentModal(true);
+};
+
 
   // ==========================================
   // IMAGE UPLOAD
@@ -290,138 +327,164 @@ const AdminResults = () => {
   // ==========================================
 
   const handleStudentSubmit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    if (!studentForm.name.trim()) {
-      alert("Please enter student name");
-      return;
+  if (!studentForm.studentName.trim()) {
+    alert("Please enter student name");
+    return;
+  }
+
+  if (!studentForm.className.trim()) {
+    alert("Please enter class / course");
+    return;
+  }
+
+  if (!studentForm.score.trim()) {
+    alert("Please enter result");
+    return;
+  }
+
+  if (!studentForm.rank.trim()) {
+    alert("Please enter rank / achievement");
+    return;
+  }
+
+  if (!selectedSection) {
+    alert("Please select a section");
+    return;
+  }
+
+  try {
+    setSaving(true);
+
+    const formData = new FormData();
+
+    formData.append(
+      "studentName",
+      studentForm.studentName.trim()
+    );
+
+    formData.append(
+      "className",
+      studentForm.className.trim()
+    );
+
+    formData.append(
+      "score",
+      studentForm.score.trim()
+    );
+
+    formData.append(
+      "rank",
+      studentForm.rank.trim()
+    );
+
+    if (studentForm.imageFile) {
+      formData.append(
+        "image",
+        studentForm.imageFile
+      );
     }
 
-    if (!selectedSection) {
-      alert("Please select a section");
-      return;
+    if (editingStudent) {
+      await axios.put(
+        `${API}/results/${selectedSection._id}/students/${editingStudent._id}`,
+        formData
+      );
+
+      alert("Student updated successfully");
+    } else {
+      await axios.post(
+        `${API}/results/${selectedSection._id}/students`,
+        formData
+      );
+
+      alert("Student added successfully");
     }
 
-    try {
-      setSaving(true);
+    await fetchResults();
 
-      const formData = new FormData();
-
-      formData.append(
-        "name",
-        studentForm.name.trim()
+    const freshSection =
+      await fetchSingleSection(
+        selectedSection._id
       );
 
-      formData.append(
-        "className",
-        studentForm.className.trim()
-      );
-
-      formData.append(
-        "result",
-        studentForm.result.trim()
-      );
-
-      formData.append(
-        "rank",
-        studentForm.rank.trim()
-      );
-
-      if (studentForm.imageFile) {
-        formData.append(
-          "image",
-          studentForm.imageFile
-        );
-      }
-
-      if (editingStudent) {
-        await axios.put(
-          `${API}/results/${selectedSection.id}/students/${editingStudent.id}`,
-          formData
-        );
-
-        alert("Student updated successfully");
-      } else {
-        await axios.post(
-          `${API}/results/${selectedSection.id}/students`,
-          formData
-        );
-
-        alert("Student added successfully");
-      }
-
-      await fetchResults();
-
-      const freshSection = await fetchSingleSection(
-        selectedSection.id
-      );
-
-      if (freshSection) {
-        setSelectedSection(freshSection);
-      }
-
-      setShowStudentModal(false);
-      setEditingStudent(null);
-
-      setStudentForm({
-        ...emptyStudent,
-      });
-    } catch (error) {
-      console.error(
-        "Student save error:",
-        error.response?.data || error.message
-      );
-
-      alert(
-        error.response?.data?.message ||
-          "Failed to save student"
-      );
-    } finally {
-      setSaving(false);
+    if (freshSection) {
+      setSelectedSection(freshSection);
     }
-  };
+
+    setShowStudentModal(false);
+    setEditingStudent(null);
+
+    setStudentForm({
+      ...emptyStudent,
+    });
+  } catch (error) {
+    console.error(
+      "STUDENT SAVE ERROR:",
+      error
+    );
+
+    console.error(
+      "SERVER RESPONSE:",
+      error.response?.data
+    );
+
+    alert(
+      error.response?.data?.message ||
+        error.message ||
+        "Failed to save student"
+    );
+  } finally {
+    setSaving(false);
+  }
+};
+
 
   // ==========================================
   // DELETE STUDENT
   // ==========================================
 
   const deleteStudent = async (studentId) => {
-    if (!selectedSection) return;
+  if (!selectedSection) return;
 
-    const confirmDelete = window.confirm(
-      "Are you sure you want to delete this student?"
+  const confirmDelete = window.confirm(
+    "Are you sure you want to delete this student?"
+  );
+
+  if (!confirmDelete) return;
+
+  try {
+    await axios.delete(
+      `${API}/results/${selectedSection._id}/students/${studentId}`
     );
 
-    if (!confirmDelete) return;
+    await fetchResults();
 
-    try {
-      await axios.delete(
-        `${API}/results/${selectedSection.id}/students/${studentId}`
+    const freshSection =
+      await fetchSingleSection(
+        selectedSection._id
       );
 
-      await fetchResults();
-
-      const freshSection = await fetchSingleSection(
-        selectedSection.id
-      );
-
-      if (freshSection) {
-        setSelectedSection(freshSection);
-      }
-
-      alert("Student deleted successfully");
-    } catch (error) {
-      console.error(
-        "Delete student error:",
-        error.response?.data || error.message
-      );
-
-      alert(
-        error.response?.data?.message ||
-          "Failed to delete student"
-      );
+    if (freshSection) {
+      setSelectedSection(freshSection);
     }
-  };
+
+    alert("Student deleted successfully");
+  } catch (error) {
+    console.error(
+      "Delete student error:",
+      error.response?.data ||
+        error.message
+    );
+
+    alert(
+      error.response?.data?.message ||
+        "Failed to delete student"
+    );
+  }
+};
+
 
   // ==========================================
   // TOTAL STUDENTS
@@ -529,11 +592,11 @@ const AdminResults = () => {
                 return (
                   <div
                     className={`section-admin-card form-control ${
-                      selectedSection?.id === section.id
+                      selectedSection?.id === section._id
                         ? "selected"
                         : ""
                     }`}
-                    key={section.id}
+                    key={section._id}
                   >
 
                     <div className="section-card-top">
@@ -551,7 +614,7 @@ const AdminResults = () => {
 
                         <button
                           onClick={() =>
-                            deleteSection(section.id)
+                            deleteSection(section._id)
                           }
                           title="Delete section"
                         >
@@ -957,13 +1020,13 @@ const AdminResults = () => {
                 <input
                   type="text"
                   placeholder="Enter student name"
-                  value={studentForm.name}
+                  value={studentForm.studentName}
                   onChange={(e) =>
-                    setStudentForm({
-                      ...studentForm,
-                      name: e.target.value,
-                    })
-                  }
+                  setStudentForm({
+                    ...studentForm,
+                    studentName: e.target.value,
+                  })
+                }
                 />
 
               </div>
