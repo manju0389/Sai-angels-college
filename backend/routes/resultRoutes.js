@@ -1,4 +1,5 @@
 const express = require("express");
+
 const router = express.Router();
 
 const upload = require("../middleware/upload");
@@ -15,43 +16,35 @@ const {
 } = require("../controllers/resultsController");
 
 // ==========================================
-// SECTION ROUTES
+// RESULT SECTIONS
 // ==========================================
 
-// GET ALL RESULT SECTIONS
 router.get("/", getResults);
 
-// GET SINGLE RESULT SECTION
-router.get("/:id", getResult);
-
-// CREATE SECTION
 router.post("/", createSection);
 
-// UPDATE SECTION
+router.get("/:id", getResult);
+
 router.put("/:id", updateSection);
 
-// DELETE SECTION
 router.delete("/:id", deleteSection);
 
 // ==========================================
-// STUDENT ROUTES
+// STUDENTS
 // ==========================================
 
-// ADD STUDENT
 router.post(
   "/:sectionId/students",
   upload.single("image"),
   createStudent
 );
 
-// UPDATE STUDENT
 router.put(
   "/:sectionId/students/:studentId",
   upload.single("image"),
   updateStudent
 );
 
-// DELETE STUDENT
 router.delete(
   "/:sectionId/students/:studentId",
   deleteStudent
