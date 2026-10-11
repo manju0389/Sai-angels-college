@@ -12,6 +12,7 @@ const achievementsRoutes = require("./routes/achievementsRoutes");
 const aboutRoutes = require("./routes/aboutRoutes");
 const homeRoutes = require("./routes/homeRoutes");
 const resultRoutes = require("./routes/resultRoutes");
+const bresultRoutes = require("./routes/bresultRoutes");
 const { verifyToken } = require("./middleware/authMiddleware");
 
 const app = express();
@@ -61,6 +62,7 @@ app.use("/api/achievements", achievementsRoutes);
 app.use("/api/about", aboutRoutes);
 app.use("/api", homeRoutes);
 app.use("/api/results", resultRoutes);
+app.use("/api/bresults", bresultRoutes);
 
 // ================= PROTECTED ROUTE =================
 app.get("/api/protected", verifyToken, (req, res) => {
@@ -74,6 +76,7 @@ res.status(500).json({
 message: "Internal Server Error",
 });
 });
+
 
 // ================= START SERVER =================
 const PORT = process.env.PORT || 3000;
