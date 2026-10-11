@@ -54,6 +54,14 @@ export default function Dashboard() {
           </Link>
         </div>
 
+        <div className="col-md-6">
+          <Link to="/admin/bresult" className="text-decoration-none">
+            <div className="card text-white bg-danger text-center p-4 shadow">
+              <h5> Board Result Exam </h5>
+            </div>
+          </Link>
+        </div>
+
 
       </div>
     </div>
