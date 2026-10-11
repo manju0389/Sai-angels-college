@@ -43,6 +43,12 @@ const Sidebar = ({ show, setShow }) => {
         </li>
 
         <li className="nav-item">
+          <Link to="/admin/bresult" className="nav-link text-white">
+            Board Result Page
+          </Link>
+        </li>
+
+        <li className="nav-item">
           <Link to="/admin/videos" className="nav-link text-white">
             Videos Page
           </Link>
