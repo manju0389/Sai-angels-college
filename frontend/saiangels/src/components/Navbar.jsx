@@ -111,6 +111,13 @@ export default function Navbar() {
                 </Link>
 
                 <Link
+                  to="/bresults"
+                  onClick={() => setAchievementOpen(false)}
+                >
+                  Board Exam Result
+                </Link>
+
+                <Link
                   to="/achievements"
                   onClick={() => setAchievementOpen(false)}
                 >
