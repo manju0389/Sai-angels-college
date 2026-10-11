@@ -11,6 +11,7 @@ import Achievements from "./pages/achievements";
 import Admission from "./pages/admission";
 import Gallery from "./pages/gallery";
 import Results from "./pages/results";
+import BResults from "./pages/bresults";
 import Video from "./pages/video";
 import Curriculum from "./pages/curriculum";
 import Contact from "./pages/contactus";
@@ -22,6 +23,7 @@ import AdminAchievements from "./pages/admin/achievements";
 import AdminGallery from "./pages/admin/gallery";
 import AdminVideos from "./pages/admin/videos";
 import AdminResult from "./pages/admin/result";
+import AdminBResult from "./pages/admin/bresult";
 import AdminAbout from "./pages/admin/about";
 
 import Login from "./pages/login";
@@ -47,6 +49,7 @@ function App() {
         <Route path="/about" element={<About />} />
         <Route path="/achievements" element={<Achievements />} />
         <Route path="/results" element={<Results />} />
+        <Route path="/bresults" element={<BResults />} />
         <Route path="/admission" element={<Admission />} />
         <Route path="/gallery" element={<Gallery />} />
         <Route path="/video" element={<Video />} />
@@ -69,6 +72,7 @@ function App() {
         <Route path="gallery" element={<AdminGallery />} />
         <Route path="videos" element={<AdminVideos />} />
         <Route path="result" element={<AdminResult />} />
+        <Route path="bresult" element={<AdminBResult />} />
        <Route path="about" element={<AdminAbout />} />
       </Route>
 
