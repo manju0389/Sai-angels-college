@@ -24,11 +24,13 @@ const Sidebar = ({ show, setShow }) => {
           </Link>
         </li>
 
-        <li className="nav-item">
-          <Link to="/admin/achievements" className="nav-link text-white">
-            Achievements Page
-          </Link>
-        </li>
+        {/* 
+          <li className="nav-item">
+            <Link to="/admin/achievements" className="nav-link text-white">
+              Achievements Page
+            </Link>
+          </li>
+        */}
 
         <li className="nav-item">
           <Link to="/admin/gallery" className="nav-link text-white">
