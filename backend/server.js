@@ -18,6 +18,15 @@ const { verifyToken } = require("./middleware/authMiddleware");
 const app = express();
 
 // ================= DATABASE =================
+
+console.log("SERVER ENV CHECK:", {
+  nodeEnv: process.env.NODE_ENV,
+  mongoUriExists: Boolean(process.env.MONGODB_URI),
+  mongoUriLength: process.env.MONGODB_URI?.length || 0,
+});
+
+connectDB();
+
 connectDB();
 
 // ================= CORS =================
