@@ -42,7 +42,13 @@ app.use(cors({
   allowedHeaders: ["Content-Type", "Authorization"]
 }));
 
+console.log("Environment diagnostics:", {
+  nodeEnv: process.env.NODE_ENV,
+  mongoUriExists: Boolean(process.env.MONGODB_URI),
+  mongoUriLength: process.env.MONGODB_URI?.length || 0,
+});
 
+connectDB();
 
 // ================= MIDDLEWARE =================
 app.use(express.json());
